@@ -1,6 +1,38 @@
 <%@page import="java.io.File"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@page import="java.util.*"%>
+<%@page import="java.sql.Connection" %>
+<%@page import="java.sql.DriverManager" %>
+<%@page import="java.sql.ResultSet" %>
+<%@page import="java.sql.Statement" %>
+
+<%
+	String driver = "com.mysql.jdbc.Driver";
+	Class.forName(driver);
+	
+	// 관리자 Login
+	String url = "jdbc:mysql://localhost:3306/moaa";
+	String id = "root";
+	String pw = "andrew12345";
+	
+	// 연결
+	Connection conn = DriverManager.getConnection(url, id, pw);
+	
+	int session_id = (int) session.getAttribute("key_id");
+	System.out.println(session_id);
+	
+	Statement st = conn.createStatement();
+	// 내가 입려한 id와 pw 값이 DB안에 있는지 확인한다
+	String sql = "SELECT domain_path FROM users_domain WHERE users_id='" + session_id + "'";
+	
+	ResultSet rs = st.executeQuery(sql);
+	//사용자 이름 세션에 저장
+	String user_name = (String) session.getAttribute("user_name");
+	// 사용자 아이디 세션에 저장
+	String user_email = (String) session.getAttribute("id");
+%>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -80,7 +112,7 @@
                 <!-- The user image in the navbar-->
                 <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                <span class="hidden-xs">Alexander Pierce</span>
+                <span class="hidden-xs"><%= user_name %></span>
               </a>
               <ul class="dropdown-menu">
                 <!-- The user image in the menu -->
@@ -88,7 +120,7 @@
                   <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                   <p>
-                    Alexander Pierce - Web Developer
+                    <%= user_name %>
                     <small>Member since Nov. 2012</small>
                   </p>
                 </li>
@@ -159,14 +191,14 @@
 			          </div>
 			          <div class="box-body">
 			          <form>
-			          <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image" style="height:100pt; width:100pt;">
-			          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			          <b>이름</b>&nbsp;
-			           Sunmin Wei
-			          <div style="padding-top:30px; padding-left: 30px;">
-			          <p><p>
-					  <input type="button" name="modify_profile" onclick="location.href='dashboard.jsp'"class="btn btn-block btn-default" value ="수정" style="width:80pt; height:30pt;">
-					  </div>	
+				          <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image" style="height:100pt; width:100pt;">
+				          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				          <b>이름</b>&nbsp;
+				          <%= user_name %>
+				          <div style="padding-top:30px; padding-left: 30px;">
+					          <p><p>
+							  <input type="button" name="modify_profile" onclick="location.href='dashboard.jsp'"class="btn btn-block btn-default" value ="수정" style="width:80pt; height:30pt;">
+						  </div>	
 			          </form>
 			          </div>
 			          
@@ -189,7 +221,7 @@
 					            	<tbody style="padding-top: 100px;">
 						            	<tr>
 							            	<td width="30%" ><b>이메일</b></td>
-							            	<td width="70%">tjsa********@gmail.com</td>
+							            	<td width="70%"><%= user_email %></td>
 						            	</tr>
 						            	<tr>
 							            	<td width="30%"><b>비밀번호</b></td>
@@ -224,30 +256,30 @@
 			          <form>
 			           	 <small><b>&nbsp;&nbsp;내 드라이브 목록</b></small><p>
 			           	 <ul id="checkboxTbl" style="list-style-type: none; margin:0; padding:0;">
-			           	 <li style = "padding-top: 10px; padding-left:30px; padding-right:40px; float:left;">
-			           	 <img alt="#" src="etc/driveimage/google_image.png" style="height:70pt; width:70pt;"><p>
-			           	 <div align="center" style="color:  #808080">
-			           	 Google Drive
-			           	 </div>
-			           	 </li>
-			           	 <li style = "padding-top: 10px; padding-left:30px; padding-right:40px; float:left;">
-			           	 <img alt="#" src="etc/driveimage/dropbox_image.png" style="height:70pt; width:70pt;"><p>
-			           	 <div align="center" style="color:  #808080">
-			           	 Dropbox
-			           	 </div>
-			           	 </li>
-			           	 <li style = "padding-top: 10px; padding-left:30px; padding-right:40px; float:left;">
-			           	 <img alt="#" src="etc/driveimage/box_image.png" style="height:70pt; width:70pt;"><p>
-			           	 <div align="center" style="color:  #808080">
-			           	 box
-			           	 </div>
-			           	 </li>
+				           	 <li style = "padding-top: 10px; padding-left:30px; padding-right:40px; float:left;">
+					           	 <a href="google_auth.html" target="_blank"><img alt="#" src="etc/driveimage/google_image.png" style="height:70pt; width:70pt;"></a><p>
+					           	 <div align="center" style="color:  #808080">
+					           	 	Google Drive
+					           	 </div>
+				           	 </li>
+				           	 <li style = "padding-top: 10px; padding-left:30px; padding-right:40px; float:left;">
+					           	 <img alt="#" src="etc/driveimage/dropbox_image.png" style="height:70pt; width:70pt;"><p>
+					           	 <div align="center" style="color:  #808080">
+					           	 	Dropbox
+					           	 </div>
+				           	 </li>
+				           	 <li style = "padding-top: 10px; padding-left:30px; padding-right:40px; float:left;">
+					           	 <img alt="#" src="etc/driveimage/box_image.png" style="height:70pt; width:70pt;"><p>
+					           	 <div align="center" style="color:  #808080">
+					           	 	box
+					           	 </div>
+				           	 </li>
 			           	 </ul>
 			           	 <div class="btn-group pull-right" style="padding-top:20px; padding-right:20px;">
 	                      <input type="button" class="btn btn-default" value="추가">
 	                      <input type="button" class="btn btn-default" onclick="location.href='adddrive.jsp'" value="더 보기">  
-	                    </div>
-			           	</form>
+	                     </div> 
+			           	 </form>
 			          </div>
 			          
 			          <!-- /.box-body -->

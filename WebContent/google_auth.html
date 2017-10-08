@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Drive API Quickstart</title>
+    <meta charset='utf-8' />
+  </head>
+  <body>
+    <p>Drive API Quickstart</p>
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <!--Add buttons to initiate auth sequence and sign out-->
+    <button id="authorize-button" style="display: none;">Authorize</button>
+    <button id="signout-button" style="display: none;">Sign Out</button>
+
+ 
+
+           <text id="content2"></text>
+   <form id="FILE_FORM" method="post" enctype="multipart/form-data" action="">
+
+            <input type="file" name="profile" id="profile">
+            <input type="submit">
+            <a class="ui-shadow ui-btn ui-corner-all" href="javascript:uploadFile2();">전송</a>
+        </form>
+        <button id="download" onclick="javascript:download();">
+
+
+    <pre id="content"></pre>
+
+    <script type="text/javascript">
+      // Client ID and API key from the Developer Console
+      var CLIENT_ID = '648521721399-qln1q3lelog6h02rinv3ic9thob7qllh.apps.googleusercontent.com';
+
+      var CLIENT_SECRET ='zF-Z6NBPkJow3JwGxYC_zjON';
+      // Array of API discovery doc URLs for APIs used by the quickstart
+      var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
+
+      // Authorization scopes required by the API; multiple scopes can be
+      // included, separated by spaces.
+      var SCOPES = 'https://www.googleapis.com/auth/drive';
+
+      var authorizeButton = document.getElementById('authorize-button');
+      var signoutButton = document.getElementById('signout-button');
+
+
+
+
+                function uploadFile2(){
+                    alert("access token : "+gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token+"refresh token : "+gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().refresh_token);
+                    appendPre2(gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token);
+        }
+
+               
+
+      function handleClientLoad() {
+        gapi.load('client:auth2', initClient);
+      }
+
+       var GoogleAuth;
+      function initClient() {
+        gapi.client.init({
+          discoveryDocs: DISCOVERY_DOCS,
+          clientId: CLIENT_ID,
+          scope: SCOPES
+        }).then(function () {
+          // Listen for sign-in state changes.
+          GoogleAuth = gapi.auth2.getAuthInstance();
+
+          gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+          // Handle the initial sign-in state.
+          updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+          authorizeButton.onclick = handleAuthClick;
+          signoutButton.onclick = handleSignoutClick;
+
+        });
+      }
+
+      function updateSigninStatus(isSignedIn) {
+        if (isSignedIn) {
+          authorizeButton.style.display = 'none';
+          signoutButton.style.display = 'block';
+
+
+          listFiles();
+
+
+
+        } else {
+          authorizeButton.style.display = 'block';
+          signoutButton.style.display = 'none';
+
+        }
+      }
+
+      function handleAuthClick(event) {
+        gapi.auth2.getAuthInstance().signIn();
+      }
+
+    
+
+    </script>
+
+    <script async defer src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
+  </body>
+</html>
