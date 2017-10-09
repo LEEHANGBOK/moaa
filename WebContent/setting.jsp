@@ -22,10 +22,43 @@
 	System.out.println(session_id);
 	
 	Statement st = conn.createStatement();
-	// 내가 입려한 id와 pw 값이 DB안에 있는지 확인한다
-	String sql = "SELECT domain_path FROM users_domain WHERE users_id='" + session_id + "'";
 	
-	ResultSet rs = st.executeQuery(sql);
+	String sql_token = "SELECT * FROM token WHERE user_id='" + session_id + "'";
+
+	
+	ResultSet rs = st.executeQuery(sql_token);
+	
+
+	ArrayList<String> driArrList = new ArrayList<String>();
+	
+	if(rs.next()){
+
+		do{
+			
+			System.out.println("success");
+			System.out.println(rs.getString("drive"));
+			driArrList.add(rs.getString("drive"));
+
+		}while(rs.next());
+
+	}else{
+	}
+	
+	Object[] objectList = driArrList.toArray();
+	String[] driArr =  Arrays.copyOf(objectList,objectList.length,String[].class);
+	
+	boolean google_con = Arrays.asList(driArr).contains("google");
+	boolean dropbox_con = Arrays.asList(driArr).contains("dropbox");
+	boolean box_con = Arrays.asList(driArr).contains("box");
+	
+	System.out.println(google_con + " " + dropbox_con + " " +  box_con);
+	
+	for(int i=0; i<2; i++){
+		System.out.println(driArr[i]);
+	}
+
+
+
 	//사용자 이름 세션에 저장
 	String user_name = (String) session.getAttribute("user_name");
 	// 사용자 아이디 세션에 저장
@@ -72,7 +105,7 @@
     <nav class="navbar navbar-static-top">
       <div class="container">
         <div class="navbar-header">
-          <a href="http://localhost:8888/Mission99/dashboard.jsp" class="navbar-brand"><b>Mission</b>99</a>
+          <a href="dashboard.jsp" class="navbar-brand"><b>Mission</b>99</a>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
             <i class="fa fa-bars"></i>
           </button>
@@ -250,52 +283,113 @@
                 <div class="col-md-6">
                    <div class="box box-default" style="height:220pt;">
 			          <div class="box-header with-border">
-			            <h3 class="box-title">드라이브 관리</h3>
+			            <h3 class="box-title">사용 가능한 드라이브 목록</h3>
 			          </div>
 			          <div class="box-body">
-			          <form>
-			           	 <small><b>&nbsp;&nbsp;내 드라이브 목록</b></small><p>
-			           	 <ul id="checkboxTbl" style="list-style-type: none; margin:0; padding:0;">
-				           	 <li style = "padding-top: 10px; padding-left:30px; padding-right:40px; float:left;">
-					           	 <a href="google_auth.html" target="_blank"><img alt="#" src="etc/driveimage/google_image.png" style="height:70pt; width:70pt;"></a><p>
-					           	 <div align="center" style="color:  #808080">
-					           	 	Google Drive
-					           	 </div>
-				           	 </li>
-				           	 <li style = "padding-top: 10px; padding-left:30px; padding-right:40px; float:left;">
-					           	 <img alt="#" src="etc/driveimage/dropbox_image.png" style="height:70pt; width:70pt;"><p>
-					           	 <div align="center" style="color:  #808080">
-					           	 	Dropbox
-					           	 </div>
-				           	 </li>
-				           	 <li style = "padding-top: 10px; padding-left:30px; padding-right:40px; float:left;">
-					           	 <img alt="#" src="etc/driveimage/box_image.png" style="height:70pt; width:70pt;"><p>
-					           	 <div align="center" style="color:  #808080">
-					           	 	box
-					           	 </div>
-				           	 </li>
-			           	 </ul>
-			           	 <div class="btn-group pull-right" style="padding-top:20px; padding-right:20px;">
-	                      <input type="button" class="btn btn-default" value="추가">
-	                      <input type="button" class="btn btn-default" onclick="location.href='adddrive.jsp'" value="더 보기">  
-	                     </div> 
+				          <form>
+				           	 <small><b>&nbsp;&nbsp;클릭 후 인증</b></small><p>
+				           	 <ul id="checkboxTbl" style="list-style-type: none; margin:0; padding:0;">
+					           	 <li style = "padding-top: 10px; padding-left:30px; padding-right:40px; float:left;">
+						           	 <a href="#" onclick="window.open('google_auth.html','popup','width=585,height=340,left=0,top=0,scrollbars=no'); return false;">
+						           	 <img alt="#" src="etc/driveimage/google_image.png" style="height:70pt; width:70pt;"></a><p>
+						           	 <div align="center" style="color:  #808080">
+						           	 	Google Drive
+						           	 </div>
+					           	 </li>
+					           	 <li style = "padding-top: 10px; padding-left:30px; padding-right:40px; float:left;">
+					           	 	<a href="#">
+						           	 	<img alt="#" src="etc/driveimage/dropbox_image.png" style="height:70pt; width:70pt;">
+						           	</a><p>
+						           	<div align="center" style="color:  #808080">
+						           	 	Dropbox
+						           	</div>
+					           	 </li>
+					           	 <li style = "padding-top: 10px; padding-left:30px; padding-right:40px; float:left;">
+						           	 <a href="#" onclick="window.open('https://account.box.com/api/oauth2/authorize?response_type=code&client_id=xgz1419a7mgtkklko63fki4tim8kdfug&redirect_url=https://localhost:8080/Mission99_tmp/setting.jsp','popup','width=800,height=500,left=0,top=0,scrollbars=no')"><img alt="#" src="etc/driveimage/box_image.png" style="height:70pt; width:70pt;"></a><p>
+						           	 <div align="center" style="color:  #808080">
+						           	 	box
+						           	 </div>
+					           	 </li>
+				           	 </ul>
+				           	 <div class="btn-group pull-right" style="padding-top:20px; padding-right:20px;">
+			                      <input type="button" class="btn btn-default" value="추가">
+			                      <input type="button" class="btn btn-default" onclick="location.href='adddrive.jsp'" value="더 보기">  
+		                     </div> 
 			           	 </form>
 			          </div>
 			          
 			          <!-- /.box-body -->
 			          </div>
 			        </div>
+			        
+			        
+			        
 			        <!-- /.box -->
 			        <div class="col-md-6">
-                   <div class="box box-default" style="height:220pt;">
-			          <div class="box-header with-border">
-			            <h3 class="box-title">Bandwidth 확인</h3>
-			          </div>
-			          <div class="box-body">
-			          </div>
-			          
-			          <!-- /.box-body -->
-			          </div>
+                   		<div class="box box-default" style="height:220pt;">
+			          		<div class="box-header with-border">
+			            		<h3 class="box-title">인증된 드라이브 목록</h3>
+			          		</div>
+			          		<div class="box-body">
+			          		<%-- <% while(rs_sql.next()) { %> --%>
+				          		<form>
+						           	 <small><b>&nbsp;&nbsp;클릭하여 활성, 비활성화</b></small><p>
+						           	 <ul id="checkboxTbl" style="list-style-type: none; margin:0; padding:0;">
+							           	 <%
+								        	if(google_con) {
+								         %>
+							           	 <li style = "padding-top: 10px; padding-left:30px; padding-right:40px; float:left;">
+								           	 <a href="#">
+								           	 	<img alt="#" src="etc/driveimage/google_image.png" style="height:70pt; width:70pt;">
+								           	 </a><p>
+								           	 <div align="center" style="color:  #808080">
+								           	 	Google Drive
+								           	 </div>
+							           	 </li>
+							           	 <%
+							        		 }
+								        	 if(dropbox_con) {
+							         	 %>
+							           	 <li style = "padding-top: 10px; padding-left:30px; padding-right:40px; float:left;">
+								           	 <a href="#">
+									           	 <img alt="#" src="etc/driveimage/dropbox_image.png" style="height:70pt; width:70pt;">
+								           	 </a><p>
+								           	 <div align="center" style="color:  #808080">
+								           	 	Dropbox
+								           	 </div>
+							           	 </li>
+							           	 <%
+							        		 }
+								        	 if(box_con) {
+							         	 %>
+							           	 <li style = "padding-top: 10px; padding-left:30px; padding-right:40px; float:left;">
+								           	 <a href="#">
+								           	 	<img alt="#" src="etc/driveimage/box_image.png" style="height:70pt; width:70pt;">
+								           	 </a><p>
+								           	 <div align="center" style="color:  #808080">
+								           	 	box
+								           	 </div>
+							           	 </li>
+							           	 <%
+							           	 	} 
+							           	 %>
+						           	 </ul>
+				           		</form>
+				           		<%-- <% } %> --%>
+		          			</div>
+			         		<!-- /.box-body -->
+			          	</div>
+			        </div>
+			        <!-- /.box -->
+			        <div class="col-md-6">
+                   		<div class="box box-default" style="height:220pt;">
+			          		<div class="box-header with-border">
+			            		<h3 class="box-title">Bandwidth 확인</h3>
+			          		</div>
+			          		<div class="box-body">
+		          			</div>
+			         		<!-- /.box-body -->
+			          	</div>
 			        </div>
 			        <!-- /.box -->
 			        <div class="col-md-6">

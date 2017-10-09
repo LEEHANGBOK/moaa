@@ -25,7 +25,6 @@ public class DropboxUp extends Thread {
 	}
 	
 	public void run() {
-		  
 				final String USER_NAME="";
 			    final String ACCESS_TOKEN = access_Token;
 			    DbxRequestConfig config2 = null;

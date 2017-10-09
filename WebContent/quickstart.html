@@ -1,6 +1,4 @@
-
 <!DOCTYPE html>
-
 <html>
   <head>
     <title>Drive API Quickstart</title>
@@ -8,50 +6,29 @@
   </head>
   <body>
     <p>Drive API Quickstart</p>
-<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 
     <!--Add buttons to initiate auth sequence and sign out-->
     <button id="authorize-button" style="display: none;">Authorize</button>
     <button id="signout-button" style="display: none;">Sign Out</button>
-  <a class="ui-shadow ui-btn ui-corner-all" href="javascript:handleClientLoad();">인증</a>
 
-           <text id="content2"></text>
-   <form id="FILE_FORM" method="post" enctype="multipart/form-data" action="">
-
-            <a class="ui-shadow ui-btn ui-corner-all" href="javascript:uploadFile2();">전송</a>
-        </form>
-
+    <pre id="content"></pre>
 
     <script type="text/javascript">
+      // Client ID and API key from the Developer Console
       // Client ID and API key from the Developer Console
       var CLIENT_ID = '1020724062873-0nbbfhahaslasmg3nio1gh7hp8kk3pqq.apps.googleusercontent.com';
 
       var CLIENT_SECRET ='ki8Bn9NqJgSSDD4Hg8nb2ZLu';
+
       // Array of API discovery doc URLs for APIs used by the quickstart
       var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
 
       // Authorization scopes required by the API; multiple scopes can be
       // included, separated by spaces.
-      var SCOPES = 'https://www.googleapis.com/auth/drive';
+      var SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly';
 
       var authorizeButton = document.getElementById('authorize-button');
       var signoutButton = document.getElementById('signout-button');
-
-
-
-                function uploadFile2(){
-                    alert("access token : "+gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token+"refresh token : "+gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().refresh_token);
-                    appendPre2(gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token);
-
-
-                }
-
-                function appendPre2(message) {
-                  var pre = document.getElementById('content2');
-                  var textContent = document.createTextNode(message + '\n');
-
-                  pre.appendChild(textContent);
-                }
 
       /**
        *  On load, called to load the auth2 library and API client library.
@@ -64,27 +41,20 @@
        *  Initializes the API client library and sets up sign-in state
        *  listeners.
        */
-       var GoogleAuth;
       function initClient() {
-
-
-
-
         gapi.client.init({
-          discoveryDocs: DISCOVERY_DOCS,
+          apiKey: API_KEY,
           clientId: CLIENT_ID,
+          discoveryDocs: DISCOVERY_DOCS,
           scope: SCOPES
         }).then(function () {
           // Listen for sign-in state changes.
-          GoogleAuth = gapi.auth2.getAuthInstance();
-
           gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
           // Handle the initial sign-in state.
           updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
           authorizeButton.onclick = handleAuthClick;
           signoutButton.onclick = handleSignoutClick;
-
         });
       }
 
@@ -96,16 +66,10 @@
         if (isSignedIn) {
           authorizeButton.style.display = 'none';
           signoutButton.style.display = 'block';
-
-
           listFiles();
-
-
-
         } else {
           authorizeButton.style.display = 'block';
           signoutButton.style.display = 'none';
-
         }
       }
 
@@ -129,15 +93,38 @@
        *
        * @param {string} message Text to be placed in pre element.
        */
+      function appendPre(message) {
+        var pre = document.getElementById('content');
+        var textContent = document.createTextNode(message + '\n');
+        pre.appendChild(textContent);
+      }
 
       /**
        * Print files.
        */
-
+      function listFiles() {
+        gapi.client.drive.files.list({
+          'pageSize': 10,
+          'fields': "nextPageToken, files(id, name)"
+        }).then(function(response) {
+          appendPre('Files:');
+          var files = response.result.files;
+          if (files && files.length > 0) {
+            for (var i = 0; i < files.length; i++) {
+              var file = files[i];
+              appendPre(file.name + ' (' + file.id + ')');
+            }
+          } else {
+            appendPre('No files found.');
+          }
+        });
+      }
 
     </script>
 
-    <script src="https://apis.google.com/js/api.js">
+    <script async defer src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()">
     </script>
   </body>
 </html>

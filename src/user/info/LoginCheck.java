@@ -68,6 +68,7 @@ public class LoginCheck extends HttpServlet {
 	        
 	        // isLogin 은 로그인 확인 유무를 위한 변수
 	        Boolean isLogin = false;
+
 	        
 	        // 사용자 email과 부합하는 고유의 id값을 초기화
 	        int key_id = 0;
