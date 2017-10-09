@@ -1,0 +1,100 @@
+<!-- <%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%> -->
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> -->
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Dropbox Auth</title>
+	<meta name="description" content="sign_in page">
+	<meta name="author" content="mission99">
+	<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+	<link href="assets/css/font-awesome.min.css" rel="stylesheet">
+	<link href="assets/css/style.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <link href="assets/css/auth.css" rel="stylesheet">
+  <link href="assets/css/sign-in-up.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container middle grid">
+	<div class="col-md-6 col-sm-6">
+		 <a href="javascript:handleClientLoad();" target="_blank"> 
+			<img alt="#" src="etc/driveimage/google_image.png" style="height:70pt; width:70pt;"><br>
+			클릭
+		</a>
+		<a href="javascript:uploadFile2();">버튼</a>
+	</div>
+	<!-- <div class="col-md-6 col-sm-6">
+		<form action="dropbox_auth" method="post">
+			<label class="input-label">토큰 엑세스 키 입력</label>
+			<input type="text" name="dropbox_token" class="form-control" placeholoder="복사한 토큰을 입력하세요">
+			<button type="submit" class="btn btn-default btn-drive" id="btn-full">토큰받기</button>
+		</form>
+	</div> -->
+</div>
+
+<script type="text/javascript">
+      // Client ID and API key from the Developer Console
+      var CLIENT_ID = '1020724062873-0nbbfhahaslasmg3nio1gh7hp8kk3pqq.apps.googleusercontent.com';
+    
+      var CLIENT_SECRET ='ki8Bn9NqJgSSDD4Hg8nb2ZLu';
+      // Array of API discovery doc URLs for APIs used by the quickstart
+      var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
+
+      var SCOPES = 'https://www.googleapis.com/auth/drive';
+
+
+                function uploadFile2(){
+                    alert("access token : "+gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token+"refresh token : "+gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().refresh_token);
+
+
+                }
+
+
+      /**
+       *  On load, called to load the auth2 library and API client library.
+       */
+      function handleClientLoad() {
+        gapi.load('client:auth2', initClient);
+      }
+
+      /**
+       *  Initializes the API client library and sets up sign-in state
+       *  listeners.
+       */
+       var GoogleAuth;
+      function initClient() {
+        gapi.client.init({
+          discoveryDocs: DISCOVERY_DOCS,
+          clientId: CLIENT_ID,
+          scope: SCOPES
+        }).then(function () {
+          // Listen for sign-in state changes.
+          GoogleAuth = gapi.auth2.getAuthInstance();
+
+          gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+          // Handle the initial sign-in state.
+          updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+         
+        });
+      }
+
+      function updateSigninStatus(isSignedIn) {
+          if (isSignedIn) {
+            gapi.auth2.getAuthInstance().signOut();
+          } else {
+            gapi.auth2.getAuthInstance().signIn();
+          }
+        }
+
+</script>
+
+<script src="https://apis.google.com/js/api.js"></script>
+
+</body>
+</html>

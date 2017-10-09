@@ -47,12 +47,20 @@
     <servlet-name>MakeUserDomain</servlet-name>
     <url-pattern>/user_domain</url-pattern>
   </servlet-mapping>
-    <servlet>
+  <servlet>
     <servlet-name>SeeUserDomain</servlet-name>
     <servlet-class>user.session.SeeUserDomain</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>SeeUserDomain</servlet-name>
     <url-pattern>/see_user_domain</url-pattern>
+  </servlet-mapping>
+ <servlet>
+    <servlet-name>GoogleToken</servlet-name>
+    <servlet-class>drives.google.GoogleToken</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GoogleToken</servlet-name>
+    <url-pattern>/google_token</url-pattern>
   </servlet-mapping>
 </web-app>
