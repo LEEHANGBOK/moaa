@@ -55,6 +55,7 @@ public class Test {
 //				new BufferedReader(new InputStreamReader(System.in)).readLine().trim();
 		DbxAuthFinish authFinish = dbxWebAuthNoRedirect.finish(dropboxAuthCode);
 		
+		//수정필요
 		String authAccessToken = authFinish.getAccessToken();
 		JsonReader<DbxAuthFinish> refreshToken = authFinish.Reader;
 		

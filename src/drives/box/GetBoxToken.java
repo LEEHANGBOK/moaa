@@ -30,7 +30,7 @@ import org.json.simple.parser.ParseException;
 
 
 
-public class getacesstoken {
+public class GetBoxToken {
 	/**
      * POST 요청
      * @param url       요청할 url
@@ -82,26 +82,8 @@ public class getacesstoken {
          
         return paramList;
     }
-     
-   
-     
- 
-    // Test
-    public static void main(String[] args) throws ParseException {
-        getacesstoken p = new getacesstoken();
-        
-        Map params = new HashMap();
-        params.put("grant_type", "authorization_code");
-        params.put("code","Ac9K7QnjOedDrv4ohaHXkU3h7fhohAnT" );
-        params.put("client_id", "xgz1419a7mgtkklko63fki4tim8kdfug");
-        params.put("client_secret","jX5a2NSLyRqVJcb1Cbicc5fW87mxDTLV");
-        String response = p.post("https://api.box.com/oauth2/token", params);
-        JSONParser parser = new JSONParser();
-        Object obj = parser.parse( response );
-        JSONObject jsonObj = (JSONObject) obj;
-        System.out.println("access_token : "+(String) jsonObj.get("access_token"));
-        System.out.println("refresh_token : "+(String) jsonObj.get("refresh_token"));
-    }
+
+      
 
 
 
