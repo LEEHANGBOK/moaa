@@ -37,12 +37,12 @@
 	</div>
 	<div class="col-md-6 col-sm-6">
 		<text id="content2"></text>
-		<a class="ui-shadow ui-btn ui-corner-all" href="javascript:uploadFile2();">토큰받아오기</a>
-		<a class="ui-shadow ui-btn ui-corner-all" href="javascript:checkToken();">토큰확인</a>
-		 <form name="google_form" action="google_token" method="post" >
+		<a class="ui-shadow ui-btn ui-corner-all btn btn-default btn-drive" id="btn-full" href="javascript:uploadFile2();" style="margin-bottom:10px">토큰받아오기</a>
+		<!-- <a class="ui-shadow ui-btn ui-corner-all btn btn-default btn-drive" id="btn-full" href="javascript:checkToken();">토큰확인</a> -->
+		 <!-- <form name="google_form" action="google_token" method="post" >
 			<input type="hidden" value="" name="google-token">
-			<button type="submit"class="btn btn-default btn-drive" id="btn-full">토큰저장</button>
-		</form> 
+			<button type="submit" class="btn btn-default btn-drive" id="btn-full">토큰저장</button>
+		</form>  -->
 	</div>
 </div>
 
