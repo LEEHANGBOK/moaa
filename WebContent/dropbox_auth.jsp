@@ -21,15 +21,16 @@
 
 <div class="container middle grid">
 	<div class="col-md-6 col-sm-6">
-		<a href="#" onclick="window.open('https://www.dropbox.com/oauth2/authorize?locale=ko-KR&response_type=code&client_id=b0ia3o6jv7sl6en','popup','width=800,height=500,left=0,top=0,scrollbars=no'); return false;" >
+		<!-- <a href="#" onclick="window.open('https://www.dropbox.com/oauth2/authorize?locale=ko-KR&response_type=code&client_id=b0ia3o6jv7sl6en','popup','width=800,height=500,left=0,top=0,scrollbars=no'); return false;" > -->
+		<a href="https://www.dropbox.com/oauth2/authorize?locale=ko-KR&response_type=code&client_id=b0ia3o6jv7sl6en" target="_blank">
 			<img alt="#" src="etc/driveimage/dropbox_image.png" style="height:70pt; width:70pt;"><br>
 			아이디 연동하기
 		</a>
 	</div>
 	<div class="col-md-6 col-sm-6">
-		<form action="dropbox_auth" method="post">
+		<form action="dropbox_token" method="post">
 			<label class="input-label">토큰 엑세스 키 입력</label>
-			<input type="text" name="dropbox_token" class="form-control" placeholoder="복사한 토큰을 입력하세요">
+			<input type="text" name="dropbox_ac_code" class="form-control">
 			<button type="submit" class="btn btn-default btn-drive" id="btn-full">토큰받기</button>
 		</form>
 	</div>

@@ -71,4 +71,12 @@
     <servlet-name>BoxToken</servlet-name>
     <url-pattern>/box_token</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>DropboxToken</servlet-name>
+    <servlet-class>drives.dropbox.DropboxToken</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DropboxToken</servlet-name>
+    <url-pattern>/dropbox_token</url-pattern>
+  </servlet-mapping>
 </web-app>

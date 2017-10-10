@@ -29,7 +29,7 @@
 	<div class="col-md-6 col-sm-6">
 		<form action="box_token" method="post" name="form">
 			<label class="input-label">토큰 엑세스 키 입력</label>
-			<input type="text" name="dropbox_ac_code" value="" class="form-control">
+			<input type="text" name="box_ac_code" value="" class="form-control">
 			<a href="javascript:set();" class="btn btn-default btn-drive" id="btn-full" style="margin-bottom: 10px">1. 코드받기</a>
 			<button type="submit" class="btn btn-default btn-drive" id="btn-full">2. 토큰받기</button>
 			
@@ -74,7 +74,7 @@
       var p = getParams();
       var Code = p["code"];
       var f = document.form;
-      f.dropbox_ac_code.value = Code;
+      f.box_ac_code.value = Code;
       
       alert(Code);
       history.replaceState({}, null, location.pathname);

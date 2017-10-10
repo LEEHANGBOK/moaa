@@ -37,11 +37,11 @@ public class GoogleToken extends HttpServlet {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		try {
-	        // 드라이버 로딩
+	         // 드라이버 로딩
 	        String driver = "com.mysql.jdbc.Driver";
 	        Class.forName(driver);
 	        
-	        // 관리자 Login
+	         // 관리자 Login
 	        String url = "jdbc:mysql://localhost:3306/moaa";
 	        String id = "root";
 	        String pw = "andrew12345";
