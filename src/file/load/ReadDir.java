@@ -87,7 +87,7 @@ public class ReadDir {
 		// db에서 token 받아와야함
 		String Drop_access_token="";
 		String Box_access_token="";
-		String google_access_token="ya29.-sozjj4EwEUTgwsZ6Unn3iSjM2uART44KvxjqNYY_TbrFkxw5MlLa4dIMT7kMPgUStYniD2ZzJAjrBgTPxoE_ExP_Ona2fp6t_GT3cL_4CDp";
+		String google_access_token="";
 
 		BoxUp box = new BoxUp(Boxlist, Box_access_token);		
 		DropboxUp drop = new DropboxUp(Droplist, Drop_access_token);

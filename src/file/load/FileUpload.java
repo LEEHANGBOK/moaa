@@ -79,25 +79,24 @@ public class FileUpload extends HttpServlet {
 			// 내가 입려한 id와 pw 값이 DB안에 있는지 확인한다
 			String sql = "SELECT domain_path FROM users_domain WHERE users_id='" + session_id + "'";
 			
+			// 활성화 되어있는 인증된 드라이브 갯수를 새기위한 정보
+//			String sql_count = "SELECT DISTINCT drive FROM token WHERE (user='" + session_id + "') AND (is_active='1')";
+
+			
 			ResultSet rs = st.executeQuery(sql);
 			
 			// 토큰 디비에서 뽑아오기
-			/*String sql_google_token = "SELECT token FROM token where (users_id='" + session_id +"') AND (drive='google'";
-			String sql_dropbox_token = "SELECT token FROM token where (users_id='" + session_id +"') AND (drive='dropbox'";
-			String sql_box_token = "SELECT token FROM token where (users_id='" + session_id +"') AND (drive='box'";
 			
-			ResultSet rs_google = st.executeQuery(sql_google_token);
-			ResultSet rs_dropbox = st.executeQuery(sql_dropbox_token);
-			ResultSet rs_box = st.executeQuery(sql_box_token);*/
 			
 			String user_domain_path="";
 			String user_name = (String) session.getAttribute("user_name");
 			
 			while(rs.next()) {
-			
 				//key_id에 디비 값을 저장 : (주의)while문 안에서만 실행된다.
 				user_domain_path = rs.getString("domain_path");
 			}
+			rs.close();
+			
 			
 			// 각 드라이브 토큰 할당 => 디비 드라이버 사용
 		    
@@ -107,23 +106,35 @@ public class FileUpload extends HttpServlet {
 			
 			
 			// 토큰저장
-			/*while(rs_google.next()) {
+			String sql_google_token = "SELECT token FROM token where (user_id='" + session_id +"') AND (drive='google') AND (is_active='1')";
+			ResultSet rs_google = st.executeQuery(sql_google_token);
+			while(rs_google.next()) {
 				
 				//key_id에 디비 값을 저장 : (주의)while문 안에서만 실행된다.
 				google_access_token = rs_google.getString("token");
+				
 			}
+			rs_google.close();
 			
+			String sql_dropbox_token = "SELECT token FROM token where (user_id='" + session_id +"') AND (drive='dropbox') AND (is_active='1')";
+			ResultSet rs_dropbox = st.executeQuery(sql_dropbox_token);
 			while(rs_dropbox.next()) {
 				
 				//key_id에 디비 값을 저장 : (주의)while문 안에서만 실행된다.
 				Drop_access_token = rs_dropbox.getString("token");
+				
 			}
+			rs_dropbox.close();
 			
+			String sql_box_token = "SELECT token FROM token where (user_id='" + session_id +"') AND (drive='box') AND (is_active='1')";
+			ResultSet rs_box = st.executeQuery(sql_box_token);
 			while(rs_box.next()) {
 				
 				//key_id에 디비 값을 저장 : (주의)while문 안에서만 실행된다.
 				Box_access_token = rs_box.getString("token");
-			}*/
+				
+			}
+			rs_box.close();
 			
 			System.out.println("User's Google Token : " + google_access_token);
 			System.out.println("User's Dropbox Token : " + Drop_access_token);
@@ -158,7 +169,6 @@ public class FileUpload extends HttpServlet {
 			
 			System.out.println("cloudDirectory: " + cloudDirectory);
 	     
-//			System.out.println("aaaaaaaaaaaaaaaaaaaaaa");
 	    	
 	    		// 사용자가 업로드 버튼을 눌렀을 때 MultipartRequest => 파일을 업로드 시키는 method
 			MultipartRequest m = new MultipartRequest(request, dir, max, "utf-8", new DefaultFileRenamePolicy());          
@@ -173,7 +183,6 @@ public class FileUpload extends HttpServlet {
 			// '/'를 최종경로 뒤에 붙여줌
 			String path = dir+System.getProperty("file.separator");
 			
-//			System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbb");
 			
 			// 분할 시작
 			Distribution d = new Distribution();
@@ -181,7 +190,6 @@ public class FileUpload extends HttpServlet {
 			Check c = new Check(path, filename1);
 			c.existenceCheck(path,filename1);
 			
-//			System.out.println("ccccccccccccccccccccccccccc");
 			
 			// 위에 메소드가 true일 경우 분할작업 진행
 			if(c.showExist()==true){
@@ -206,19 +214,16 @@ public class FileUpload extends HttpServlet {
 				// Console 확인
 				System.out.println("filename: " + filename1);
 				
-//				System.out.println("ddddddddddddddddddddddddddddddddddd");
 				
 				// 분할 최종 메소드 distribution(임시저장 경로에 저장할거고, 분할파일을 드라이브 수로 나누고, 
 				//나중에 zip 결합을 위해 확장자 빼고 이름만, 임시저장하기 위해 확장자까지)
 				d.distribution(cloudDirectory, size/cloudNumber, onlyName, fullPath, user_domain_path);
 				
 				System.out.println("file size: " + size );
-//				System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 				
 				// 각각의 클라우드에 업로드 시작
 				ReadDir readDir = new ReadDir();
 				
-//				System.out.println("fffffffffffffffffffffffffffffffff");
 				
 				// 분할된 파일들이 임시 저장되어 있는 공간을 읽어드림
 				readDir.read(cloudDirectory);
