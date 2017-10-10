@@ -425,35 +425,38 @@
           <div class="box">
             <div class="box-header with-border">
             <h3 class="box-title"></h3>
-					<div class="btn-group" style = "padding-left:35px;" "float:left;">
-					<form action="fileupload.jsp" method="post"  enctype="multipart/form-data">
-					<input type="file" multiple id="file" name="userfile" style="display:inline" >
-					<script>
-						var curStyle=document.getElementById("file").style.display;
-							document.getElementById("file").style.display="none";
-					</script>
-					<button id="newFile" onclick="check()" class="btn btn-default">올리기</button>	
-					<button type="button" class="btn btn-default">내려받기</button>
-                    <button type="button" class="btn btn-default">삭제</button>
-				 	<script>
-				 	function check(){
-				 		eventOccur(document.getElementById('file'),'click');
-				 	}
-				 	
-				 	function eventOccur(evEle, evType){
-				 		  if (evEle.fireEvent) {
-				 		    evEle.fireEvent('on' + evType);
-				 		  } else {
-				 		    var mouseEvent = document.createEvent('MouseEvents');
-				 		    mouseEvent.initEvent(evType, true, false);
-				 		    var transCheck = evEle.dispatchEvent(mouseEvent);
-				 		    if (!transCheck) {
-				 		      console.log("클릭 이벤트 발생 실패!");
-				 		    }
-				 		  }
-				 		}
-				 	</script>
-				 </form> 					
+				<div class="btn-group" style = "padding-left:35px;" "float:left;">
+					<form action="file_upload" method="post"  enctype="multipart/form-data">
+						<input type="file" multiple id="file" name="userfile" style="display:inline" placeholder="파일 선택"/>
+						<!-- <input type="submit" /> -->
+						<!-- <script>
+							var curStyle=document.getElementById("file").style.display;
+								document.getElementById("file").style.display="none";
+						</script> -->
+						<button id="newFile" type="submit" class="btn btn-default">올리기</button>
+						<!-- onclick="check()" -->
+						<!-- <script>
+						 	function check(){
+						 		eventOccur(document.getElementById('file'),'click');
+						 	}			 	
+						 	function eventOccur(evEle, evType){
+					 		  if (evEle.fireEvent) {
+					 		    evEle.fireEvent('on' + evType);
+					 		  } else {
+					 		    var mouseEvent = document.createEvent('MouseEvents');
+					 		    mouseEvent.initEvent(evType, true, false);
+					 		    var transCheck = evEle.dispatchEvent(mouseEvent);
+					 		    if (!transCheck) {
+					 		      console.log("클릭 이벤트 발생 실패!");
+					 		    }
+					 		  }
+					 		}
+					 	</script> -->
+				 	</form> 	
+						<!-- <button type="button" class="btn btn-default">내려받기</button>
+	                    <button type="button" class="btn btn-default">삭제</button> -->
+					 	
+									
 				</div>
 				
 				<div class="btn-group pull-right">

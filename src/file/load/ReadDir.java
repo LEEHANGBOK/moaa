@@ -1,16 +1,15 @@
 package file.load;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import drives.box.BoxUp;
+import drives.dropbox.DropboxUp;
+import drives.google.GoogleUp;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
-import drives.box.BoxUp;
-import drives.dropbox.DropboxUp;
-import drives.google.GoogleUp;
 
 public class ReadDir {
 	
@@ -19,134 +18,83 @@ public class ReadDir {
 	public static String[] Droplist;
 	public static String[] totallist;
 	
-	public void zip4j(String direct) {
-
-		try {
-			// Initiate ZipFile object with the path/name of the zip file.
-			ZipFile zipFile = new ZipFile(direct+System.getProperty("file.separator")+"uniqlo.zip");
-			
-			// Build the list of files to be added in the array list
-			// Objects of type File have to be added to the ArrayList
-			ArrayList filesToAdd = new ArrayList();//압출할 파일 대상들.
-			
-			// input change
-			filesToAdd.add(new File("//Users/ikhwan/Downloads/과제1_유니클로.ppsx"));
-			
-//			filesToAdd.add(new File("c:\\ZipTest\\myvideo.avi"));
-//			filesToAdd.add(new File("c:\\ZipTest\\mysong.mp3"));
-//			
-			// Initiate Zip Parameters which define various properties such
-			// as compression method, etc.
-			ZipParameters parameters = new ZipParameters();
-			
-			// set compression method to store compression
-			parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
-			
-			// Set the compression level. This value has to be in between 0 to 9
-			parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
-			
-			// Create a split file by setting splitArchive parameter to true
-			// and specifying the splitLength. SplitLenth has to be greater than
-			// 65536 bytes
-			// Please note: If the zip file already exists, then this method throws an 
-			// exception
-			zipFile.createZipFile(filesToAdd, parameters, true, 660000);//파일 사이즈 byte단위
-			System.out.println(zipFile.getSplitZipFiles());			
-			
-		} catch (ZipException e) {
-			e.printStackTrace();
-		}
-	}
 	public void read(String dir) {
 		String path=dir;
-		File dirFile=new File(path);
-		File []fileList=dirFile.listFiles();
-		int size = fileList.length;
+				File dirFile=new File(path);
+				File []fileList=dirFile.listFiles();
+				int size = fileList.length;
+				
+				//totallist = new String[size];
+				
+				int drivesize = size/3;
+				int flag =0;
+				int fluence = 0;
+				Googlelist = new String[drivesize];
+				Boxlist = new String[drivesize];
+				Droplist = new String[drivesize];
+				for(File tempFile : fileList) {
+				  if(tempFile.isFile()) {
+				    String tempPath=tempFile.getParent();
+				    String tempFileName=tempFile.getName();
+				    System.out.println("Path="+tempPath);
+				    System.out.println("FileName="+tempFileName);
+
+				    switch(flag) {
+				    case 0  :System.out.println("G: " + flag +", fluence :" + fluence + ", size : "+ Googlelist.length); 
+				    	Googlelist[fluence] = tempPath+System.getProperty("file.separator")+tempFileName;
+				    			flag = 1;
+				    			break;
+				    case 1  :System.out.println("B: " + flag +", fluence :" + fluence + ", size : "+ Boxlist.length); 
+				    	Boxlist[fluence] = tempPath+System.getProperty("file.separator")+tempFileName;
+	    						flag = 2;
+	    						break;
+	    					
+				    case 2  : System.out.println("D: " + flag +", fluence :" + fluence + ", size : "+ Droplist.length);   
+				    	Droplist[fluence] = tempPath+System.getProperty("file.separator")+tempFileName;
+				    			flag = 0;
+				    			fluence++;
+				    			break;
+				    	default : System.out.println("finish");
+				    			break;
+				    }
+				    
+				  }
+				}
+	}
 		
-		totallist = new String[size];
+	public String[] getBoxlist(){
+		return Boxlist;
 		
-		int drivesize = size/3;
-		int flag =0;
-		int fluence = 0;
-		Googlelist = new String[drivesize];
-		Boxlist = new String[drivesize];
-		Droplist = new String[drivesize];
-		for(File tempFile : fileList) {
-		  if(tempFile.isFile()) {
-		    String tempPath=tempFile.getParent();
-		    String tempFileName=tempFile.getName();
-		    System.out.println("Path="+tempPath);
-		    System.out.println("FileName="+tempFileName);
-//			totallist[fluence] = tempPath+System.getProperty("file.separator")+tempFileName;
-//			fluence++;
-		    switch(flag) {
-			    case 0  :System.out.println("G: " + flag +", fluence :" + fluence + ", size : "+ Googlelist.length); 
-			    	Googlelist[fluence] = tempPath+System.getProperty("file.separator")+tempFileName;
-	    			flag = 1;
-	    			break;
-			    case 1  :System.out.println("B: " + flag +", fluence :" + fluence + ", size : "+ Boxlist.length); 
-			    	Boxlist[fluence] = tempPath+System.getProperty("file.separator")+tempFileName;
-					flag = 2;
-					break;
-						
-			    case 2  : System.out.println("D: " + flag +", fluence :" + fluence + ", size : "+ Droplist.length);   
-			    	Droplist[fluence] = tempPath+System.getProperty("file.separator")+tempFileName;
-	    			flag = 0;
-	    			fluence++;
-	    			break;
-		    	default : System.out.println("finish");
-    				break;
-		    }
-		    
-		  }
-		}
+	}
+	
+	public String[] getGooglelist(){
+		return Googlelist;
+	}
+	
+	public String[] getDropboxlist(){
+		return Droplist;
 	}
 	
 	
-
-	
 	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
 		
-		// 임시저장소 경로 찾는거
-		// input change => 사용자 도메인에 tmp 만들어서
-		String directory= System.getProperty("user.home")+System.getProperty("file.separator")+"mission_temp";
-		boolean result; 
-		File f = new File(directory); 
-		// 최 하위 디렉토리에 대해서만 생성을 함. 
-		// 최 하위 디렉토리의 바루 상위 디렉토리가 존재하지 않을 경우,
-		// 디렉토리가 생성되지 못하고, false를 리턴함 
-		result = f.mkdir(); 
-		System.out.println(result ? "directory is made" : "directory is not made"); 
-		// 상위 디렉토리가 존재하지 않을 경우, 상위 디렉토리까지 생성함 
-		//result = f.mkdirs(); System.out.println(result == true ? "directory is made" : "directory is not made");
+		// 분할파일 저장소 경로
+		String directory=System.getProperty("user.home")+System.getProperty("file.separator")+"Desktop"+System.getProperty("file.separator")+"UserDomain"+System.getProperty("file.separator")+"UserDomain_01"+System.getProperty("file.separator")+"Temp"+System.getProperty("file.separator")+"Upload";
 		
-		
-	
-
-		ReadDir dir = new ReadDir();
-		dir.zip4j(directory);
-		
-	
+		ReadDir dir = new ReadDir();	
 		dir.read(directory);
 		
-		// Token은 해당 유저의 데이터베이스로부터 추출
-		// input change
-		String Drop_access_token="kFb_ENWtmyUAAAAAAAAAhsfjcyGuzOLDc5MDHdDGU41xjFGFsUVztfzO_TkF9Wo6";
-		String Box_access_token="nxlisAU9KiiXOjRNjFHm8DPtdYDSxlXN";
-		String google_access_token="ya29.GlzbBFtyRVlaunQf67PR7C5HRuN3ztdayD1EdRu7AZr6v-9zEWYA9KAo3k07TkVbgvlsbsPiLfJPTaM4gJqzEXxcj3zPdFw0Mb2U_oDzOo87IiG3Fyepjpu_PEsnfA";
-		
+		// db에서 token 받아와야함
+		String Drop_access_token="";
+		String Box_access_token="";
+		String google_access_token="ya29.-sozjj4EwEUTgwsZ6Unn3iSjM2uART44KvxjqNYY_TbrFkxw5MlLa4dIMT7kMPgUStYniD2ZzJAjrBgTPxoE_ExP_Ona2fp6t_GT3cL_4CDp";
 
-		
-		BoxUp box = new BoxUp(Boxlist, Box_access_token);
+		BoxUp box = new BoxUp(Boxlist, Box_access_token);		
 		DropboxUp drop = new DropboxUp(Droplist, Drop_access_token);
 		GoogleUp google = new GoogleUp(Googlelist, google_access_token);
 		box.start();
 		drop.start();
 		google.start();
-//		upload.boxupload(Boxlist, Box_access_token);
-//		upload.dropupload(Droplist, Drop_access_token);
-//		upload.googleupload(Googlelist, google_access_token);
 		System.out.println("-------Finish -------");
 	}
 
