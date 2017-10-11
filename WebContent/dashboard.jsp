@@ -25,7 +25,7 @@
 	Connection conn = DriverManager.getConnection(url, id, pw);
 	
 	int session_id = (int) session.getAttribute("key_id");
-	System.out.println(session_id);
+	System.out.println("In dashboard, user's session's id : " + session_id);
 	
 	Statement st = conn.createStatement();
 	// 내가 입려한 id와 pw 값이 DB안에 있는지 확인한다

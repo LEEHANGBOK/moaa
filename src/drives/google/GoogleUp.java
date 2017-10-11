@@ -22,10 +22,14 @@ public class GoogleUp extends Thread {
 	private String access_Token ;
 	private String[] filepath;
 	private Drive service;
+	private String user_domain_path;
+	private String filename;
 	
-	public GoogleUp(String[] path, String token) {
+	public GoogleUp(String[] path, String token, String user_domain_path, String filename) {
 		filepath=path;
 		access_Token=token;
+		this.user_domain_path = user_domain_path;
+		this.filename = filename;
 		
 		Credential credential= new GoogleCredential().setAccessToken(access_Token);
 		service= new Drive.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), credential)
@@ -35,7 +39,7 @@ public class GoogleUp extends Thread {
 	
 	public void run() {
 		for(String path : filepath) {
-			if(path!="") {
+			if(path!=null) {
 	    	int n = path.lastIndexOf("/");
 	    	int s = path.lastIndexOf(".");
 	    	Path source = Paths.get(path);
@@ -72,7 +76,14 @@ public class GoogleUp extends Thread {
 		    FileContent mediaContent = new FileContent(mimeType, fileContent);
 		    try {
 		    	// input change => 서버 도메인으로 로그파일 자동생성
-		    	BufferedWriter a = new BufferedWriter(new FileWriter(System.getProperty("user.home")+System.getProperty("file.separator")+"mission_temp"+System.getProperty("file.separator")+"logfile_Google.txt",true));
+//		    	BufferedWriter a = new BufferedWriter(new FileWriter(System.getProperty("user.home")+System.getProperty("file.separator")+"andrew"+System.getProperty("file.separator") +"Desktop"
+//						+ System.getProperty("file.separator")+"Workspace"+System.getProperty("file.separator")+"dirPractice"+System.getProperty("file.separator")
+//						+ user_domain_path +System.getProperty("file.separator")+"log" + System.getProperty("file.separator") + "load" 
+//						+ System.getProperty("file.separator") + filename + System.getProperty("file.separator")+System.getProperty("file.separator")+"logfile_Google.txt",true));
+		    	
+		    	BufferedWriter a = new BufferedWriter(new FileWriter("/home/andrew/Desktop/Workspace/dirPractice/"
+		            	+ user_domain_path + "/log/load/" + filename + "/logfile_Google.txt",true)); 
+		    	
 		    	File file = service.files().insert(body, mediaContent).execute();
 	
 		    	// Uncomment the following line to print the File ID.
@@ -81,10 +92,10 @@ public class GoogleUp extends Thread {
 			   a.newLine();
 			   a.close();
 		       
-		    } catch (IOException e) {
-		      System.out.println("An error occurred: " + e);
+			    } catch (IOException e) {
+			      System.out.println("An error occurred: " + e);
 		      
-		    }
+			    }
 		    }
 		}
 	}

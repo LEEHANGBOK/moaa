@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Enumeration;
 
 import javax.servlet.ServletException;
@@ -23,6 +24,7 @@ import drives.dropbox.DropboxUp;
 import drives.google.GoogleUp;
 import file.distribution.Check;
 import file.distribution.Distribution;
+import user.domain.CreateDirectory;
 
 /**
  * Servlet implementation class FileUpload
@@ -104,6 +106,8 @@ public class FileUpload extends HttpServlet {
 		    String Drop_access_token="";
 			String Box_access_token="";
 			
+			// 활성화된 드라이브 갯수
+			int drive_count=0;
 			
 			// 토큰저장
 			String sql_google_token = "SELECT token FROM token where (user_id='" + session_id +"') AND (drive='google') AND (is_active='1')";
@@ -112,7 +116,7 @@ public class FileUpload extends HttpServlet {
 				
 				//key_id에 디비 값을 저장 : (주의)while문 안에서만 실행된다.
 				google_access_token = rs_google.getString("token");
-				
+				drive_count++;
 			}
 			rs_google.close();
 			
@@ -122,7 +126,7 @@ public class FileUpload extends HttpServlet {
 				
 				//key_id에 디비 값을 저장 : (주의)while문 안에서만 실행된다.
 				Drop_access_token = rs_dropbox.getString("token");
-				
+				drive_count++;
 			}
 			rs_dropbox.close();
 			
@@ -132,10 +136,11 @@ public class FileUpload extends HttpServlet {
 				
 				//key_id에 디비 값을 저장 : (주의)while문 안에서만 실행된다.
 				Box_access_token = rs_box.getString("token");
-				
+				drive_count++;
 			}
 			rs_box.close();
 			
+			System.out.println("The number of activated dirves is : " + drive_count);
 			System.out.println("User's Google Token : " + google_access_token);
 			System.out.println("User's Dropbox Token : " + Drop_access_token);
 			System.out.println("User's Box Token : " + Box_access_token);
@@ -164,7 +169,7 @@ public class FileUpload extends HttpServlet {
 					+ user_domain_path +System.getProperty("file.separator")+"tmp" + System.getProperty("file.separator") + "Upload" 
 					+ System.getProperty("file.separator") + "spr";
 			
-//			String cloudDirectory = "/home/andrew/Desktop/Workspace/dirPractice/" + user_domain_path + "/tmp/Upload/spr";
+			// String cloudDirectory = "/home/andrew/Desktop/Workspace/dirPractice/" + user_domain_path + "/tmp/Upload/spr";
 			
 			
 			System.out.println("cloudDirectory: " + cloudDirectory);
@@ -176,10 +181,13 @@ public class FileUpload extends HttpServlet {
 	    		
 			Enumeration files=m.getFileNames();  
 			System.out.println("files: " + files);
+			
 			String file1 =(String)files.nextElement(); 
 			System.out.println("file1: " + file1);
+			
 			filename1=m.getFilesystemName(file1);
 			System.out.println("file name: " + filename1);
+			
 			// '/'를 최종경로 뒤에 붙여줌
 			String path = dir+System.getProperty("file.separator");
 			
@@ -200,16 +208,20 @@ public class FileUpload extends HttpServlet {
 				
 				// '3'부분이 나중에 활성화된 드라이브 수에 따라 바뀌도록 되어야 함
 				// int isActiveDrive; //= DB drive
-				int cloudNumber = 3;
+				int cloudNumber = drive_count;
 				
 				// 분할파일이 임시 저장되어있는 경로 할당
 	 			/*String temp =d.showTemp();*/
 	 			
 				// 확장자를 제외한 오직 파일 이름만 할당
 				String onlyName = c.getFileName(filename1);		
+				String onlyExt = c.getExtension(filename1);
+				
+				
+				String filename = onlyName + "_" + onlyExt;
 				
 				//경로+파일이름(확장자까지)
-				String fullPath =path+filename1;					
+				String fullPath =path+filename1;
 				
 				// Console 확인
 				System.out.println("filename: " + filename1);
@@ -219,6 +231,23 @@ public class FileUpload extends HttpServlet {
 				//나중에 zip 결합을 위해 확장자 빼고 이름만, 임시저장하기 위해 확장자까지)
 				d.distribution(cloudDirectory, size/cloudNumber, onlyName, fullPath, user_domain_path);
 				
+				File selectedOrgDir = new File(dir);
+				File[] innerOrgFiles= selectedOrgDir.listFiles(); 
+				int dirOrgListLen = innerOrgFiles.length;
+				int targetOrgFileIndex=0;
+				for(int i = 0 ; i < dirOrgListLen; i++) {
+					if(innerOrgFiles[i].getName() == filename1) {
+						targetOrgFileIndex = i;
+						break;
+					}
+				}
+				if(innerOrgFiles[targetOrgFileIndex].exists()) {
+					innerOrgFiles[targetOrgFileIndex].delete();
+					System.out.println("[Knowing] After separating original file, the original file is successfully deleted!");
+				} else {
+					System.out.println("[Warning] There is no that such original file!");
+				}
+				
 				System.out.println("file size: " + size );
 				
 				// 각각의 클라우드에 업로드 시작
@@ -226,23 +255,59 @@ public class FileUpload extends HttpServlet {
 				
 				
 				// 분할된 파일들이 임시 저장되어 있는 공간을 읽어드림
-				readDir.read(cloudDirectory);
+				readDir.read(cloudDirectory, drive_count);
 				String[] temp2 = readDir.getBoxlist();
 				System.out.println("min"+temp2[0]);
-				BoxUp box = new BoxUp(temp2, Box_access_token);		
-				DropboxUp drop = new DropboxUp(readDir.getDropboxlist(), Drop_access_token);
-				GoogleUp google = new GoogleUp(readDir.getGooglelist(), google_access_token);
+				
+				CreateDirectory createLogDir = new CreateDirectory();
+				createLogDir.mkLogDir(user_domain_path, filename);
+				
+				BoxUp box = new BoxUp(temp2, Box_access_token, user_domain_path, filename);		
+				DropboxUp drop = new DropboxUp(readDir.getDropboxlist(), Drop_access_token, user_domain_path, filename);
+				GoogleUp google = new GoogleUp(readDir.getGooglelist(), google_access_token, user_domain_path, filename);
+				
+				ArrayList<Thread> threadList = new ArrayList<Thread>();
+				
 				box.start();
 				drop.start();
 				google.start();
-				System.out.println("-------Finish -------");
+				threadList.add(box);
+				threadList.add(drop);
+				threadList.add(google);
 				
+				
+				for(int i = 0 ; i < threadList.size() ; i++) {
+					threadList.get(i).join();
+				}
+				
+				
+				// 분할된 파일 엽로드 완료후 삭제
+				// 해당 파일의 이름을 가진 파일은 모두 삭제
+				File selectedSprDir = new File(cloudDirectory);
+				File[] innerSprFiles= selectedSprDir.listFiles(); 
+				int dirListLen = innerSprFiles.length;
+				for(int i = 0 ; i < dirListLen; i++) {
+					String sprFileName = innerSprFiles[i].getName();
+					if(sprFileName.contains(onlyName)) {
+						innerSprFiles[i].delete();
+						System.out.println("[Knowing] " + sprFileName + "is successfully deleted!");
+					}
+				}
+				if(innerSprFiles.length == dirListLen) {
+					System.out.println("[Warning] There were no that such separated files!");
+				}
+				
+				
+				
+				System.out.println("------------ Finish ------------ ");
+				
+				response.sendRedirect("dashboard.jsp");
 				
 			}else{
 				System.err.println("error");
 				response.sendRedirect("dashboard.jsp");    
 			}
-		    System.out.println("after if : " + path);            
+		    
 	    }catch(Exception e){ 
 	        e.printStackTrace(); 
 	    }

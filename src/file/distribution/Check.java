@@ -48,5 +48,10 @@ public class Check {
 		String name[]=name2.split("\\.");
 		return name[0];
 	}	
+	
+	public static String getExtension(String name2){		//파일 확장자 split 메소드
+		String name[]=name2.split("\\.");
+		return name[1];
+	}	
 
 }

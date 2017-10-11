@@ -44,6 +44,7 @@ public class Distribution {
 			zipFile.createZipFile(filesToAdd, parameters, true, size);//파일 사이즈 byte단위
 			System.out.println(zipFile.getSplitZipFiles());
 			
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}

@@ -17,11 +17,15 @@ public class DropboxUp extends Thread {
 
 	private String access_Token ;
 	private String[] filepath;
+	private String user_domain_path;
+	private String filename;
 	
-	public DropboxUp(String[] path, String token) {
+	public DropboxUp(String[] path, String token, String user_domain_path, String filename) {
 		//filepath=path;
 		filepath=path;
 		access_Token=token;
+		this.user_domain_path = user_domain_path;
+		this.filename = filename;
 	}
 	
 	public void run() {
@@ -34,11 +38,18 @@ public class DropboxUp extends Thread {
 		        client = new DbxClientV2(config2, ACCESS_TOKEN);// input change => 서버 도메인으로 로그파일 자동생성
 		        try {
 		        	// input change => 서버 도메인으로 로그파일 자동생성
-					BufferedWriter a = new BufferedWriter(new FileWriter(System.getProperty("user.home")+System.getProperty("file.separator")+"mission_temp"+System.getProperty("file.separator")+"logfile_Drop.txt",true));
+//					BufferedWriter a = new BufferedWriter(new FileWriter(System.getProperty("user.home")+System.getProperty("file.separator")+"andrew"+System.getProperty("file.separator") +"Desktop"
+//							+ System.getProperty("file.separator")+"Workspace"+System.getProperty("file.separator")+"dirPractice"+System.getProperty("file.separator")
+//							+ user_domain_path +System.getProperty("file.separator")+"log" + System.getProperty("file.separator") + "load" 
+//							+ System.getProperty("file.separator") + filename + System.getProperty("file.separator")+"logfile_Drop.txt",true));
+		        	
+		        	BufferedWriter a = new BufferedWriter(new FileWriter("/home/andrew/Desktop/Workspace/dirPractice/"
+		                	+ user_domain_path + "/log/load/" + filename + "/logfile_Drop.txt",true)); 
 				
+					
 		        try {
 		            account2 = client.users().getCurrentAccount();
-		            System.out.println(account2.getName().getDisplayName());
+		            System.out.println("[Knowing] Dropbox's authorized user's name : " + account2.getName().getDisplayName());
 		        }
 		        catch (DbxException dbxe)
 		        {
@@ -49,7 +60,7 @@ public class DropboxUp extends Thread {
 		        
 		       
 		        	for(String path : filepath) {
-		        		if(path!="") {
+		        		if(path!=null) {
 		        	int n = path.lastIndexOf("/");
 		        	int size = path.length();
 		        	

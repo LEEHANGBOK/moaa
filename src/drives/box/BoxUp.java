@@ -17,14 +17,29 @@ public class BoxUp extends Thread{
 	private String access_Token ;
 	private String[] filepath;
 	private String[] fileID;
+	private String user_domain_path;
+	private String filename;
 	
-	public BoxUp(String[] path, String token) {
+	public BoxUp(String[] path, String token, String user_domain_path, String filename) {
 		//filepath=path;
 		filepath=path;
-		fileID= new String[filepath.length];
+		
 		access_Token=token;
+		this.user_domain_path = user_domain_path;
+		this.filename = filename;
 	}
 	
+	
+	public int check(String[] checklist) {
+		int length = 0 ;
+		
+		for(int i = 0 ; i < checklist.length ; i++) {
+			if(checklist[i]!=null)
+				length++;
+		}
+		
+		return length;
+	}
 	
 	public void run() {
 		//인증으로 얻은 accesstoken넣으면
@@ -35,19 +50,25 @@ public class BoxUp extends Thread{
         System.out.format("Welcome, %s <%s>!\n\n", userInfo.getName(), userInfo.getLogin());
         BoxFolder rootFolder = BoxFolder.getRootFolder(api);
         int num = 0; 
+        int length = check(filepath);
+        fileID= new String[length];
+       
         for(String path : filepath) {
-        	if(path!="") {
+        	if(path!=null) {
+        		
         	int n = path.lastIndexOf("/");
+        	
         	int size = path.length();
         	
         //저장된 파일경
-        	String foldername = path.substring(n+1, size);
+        String foldername = path.substring(n+1, size);
         //파일 업로드 관련 줄 
         FileInputStream stream;
 		try {
 			
 			stream = new FileInputStream(path);
 			BoxItem.Info iteminfo = rootFolder.uploadFile(stream, foldername);
+			System.out.println("Box file id : " + iteminfo.getID());
 			fileID[num]=iteminfo.getID();
 			num++;
 	        stream.close();
@@ -61,15 +82,24 @@ public class BoxUp extends Thread{
 		
 		
         	}}
+       
         try {
+        	// "/home/andrew/Desktop/Workspace/dirPractice/" + path + "/log/load"
         	// input change => 서버 도메인으로 로그파일 자동생성
-        	BufferedWriter a = new BufferedWriter(new FileWriter(System.getProperty("user.home")+System.getProperty("file.separator")+"mission_temp"+System.getProperty("file.separator")+"logfile_Box.txt",true));
+//        	BufferedWriter a = new BufferedWriter(new FileWriter(System.getProperty("user.home")+System.getProperty("file.separator")+"andrew"+System.getProperty("file.separator") +"Desktop"
+//					+ System.getProperty("file.separator")+"Workspace"+System.getProperty("file.separator")+"dirPractice"+System.getProperty("file.separator")
+//					+ user_domain_path +System.getProperty("file.separator")+"log" + System.getProperty("file.separator") + "load" 
+//					+ System.getProperty("file.separator") + filename + System.getProperty("file.separator")+"logfile_Box.txt",true));
+        	
+        	BufferedWriter a = new BufferedWriter(new FileWriter("/home/andrew/Desktop/Workspace/dirPractice/"
+        	+ user_domain_path + "/log/load/" + filename + "/logfile_Box.txt",true)); 
+        	
         	for( String id : fileID) {
-        	a.write(id);
-			a.newLine();
-				
+	        	a.write(id);
+				a.newLine();
 			}
 			a.close();
+			
 			System.out.println("Box log file is finished");
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block

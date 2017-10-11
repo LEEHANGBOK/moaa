@@ -30,8 +30,7 @@
 	
 	if(rs.next()){
 		do{
-			System.out.println("success");
-			System.out.println(rs.getString("drive"));
+			System.out.println("[Knowing] " + rs.getString("drive") + " is authorized");
 			driArrList.add(rs.getString("drive"));
 		}while(rs.next());
 
@@ -45,7 +44,7 @@
 	boolean dropbox_con = Arrays.asList(driArr).contains("dropbox");
 	boolean box_con = Arrays.asList(driArr).contains("box");
 	
-	System.out.println(google_con + " " + dropbox_con + " " +  box_con);
+	/* System.out.println(google_con + " " + dropbox_con + " " +  box_con); */
 	
 	/* for(int i=0; i<2; i++){
 		System.out.println(driArr[i]);
@@ -170,7 +169,7 @@
                     <a href="#" class="btn btn-default btn-flat">Profile</a>
                   </div>
                   <div class="pull-right">
-                    <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                    <a href="logout_check" class="btn btn-default btn-flat">Sign out</a>
                   </div>
                 </li>
               </ul>

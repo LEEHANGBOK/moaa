@@ -18,7 +18,7 @@ public class ReadDir {
 	public static String[] Droplist;
 	public static String[] totallist;
 	
-	public void read(String dir) {
+	public void read(String dir, int drive_count) {
 		String path=dir;
 				File dirFile=new File(path);
 				File []fileList=dirFile.listFiles();
@@ -26,7 +26,7 @@ public class ReadDir {
 				
 				//totallist = new String[size];
 				
-				int drivesize = size/3;
+				int drivesize = size/drive_count+1;
 				int flag =0;
 				int fluence = 0;
 				Googlelist = new String[drivesize];
@@ -78,24 +78,24 @@ public class ReadDir {
 	
 	public static void main(String[] args) throws IOException {
 		
-		// 분할파일 저장소 경로
-		String directory=System.getProperty("user.home")+System.getProperty("file.separator")+"Desktop"+System.getProperty("file.separator")+"UserDomain"+System.getProperty("file.separator")+"UserDomain_01"+System.getProperty("file.separator")+"Temp"+System.getProperty("file.separator")+"Upload";
-		
-		ReadDir dir = new ReadDir();	
-		dir.read(directory);
-		
-		// db에서 token 받아와야함
-		String Drop_access_token="";
-		String Box_access_token="";
-		String google_access_token="";
-
-		BoxUp box = new BoxUp(Boxlist, Box_access_token);		
-		DropboxUp drop = new DropboxUp(Droplist, Drop_access_token);
-		GoogleUp google = new GoogleUp(Googlelist, google_access_token);
-		box.start();
-		drop.start();
-		google.start();
-		System.out.println("-------Finish -------");
+//		// 분할파일 저장소 경로
+//		String directory=System.getProperty("user.home")+System.getProperty("file.separator")+"Desktop"+System.getProperty("file.separator")+"UserDomain"+System.getProperty("file.separator")+"UserDomain_01"+System.getProperty("file.separator")+"Temp"+System.getProperty("file.separator")+"Upload";
+//		
+//		ReadDir dir = new ReadDir();	
+//		dir.read(directory);
+//		
+//		// db에서 token 받아와야함
+//		String Drop_access_token="";
+//		String Box_access_token="";
+//		String google_access_token="";
+//
+//		BoxUp box = new BoxUp(Boxlist, Box_access_token);		
+//		DropboxUp drop = new DropboxUp(Droplist, Drop_access_token);
+//		GoogleUp google = new GoogleUp(Googlelist, google_access_token);
+//		box.start();
+//		drop.start();
+//		google.start();
+//		System.out.println("-------Finish -------");
 	}
 
 }

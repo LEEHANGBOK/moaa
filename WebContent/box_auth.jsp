@@ -38,16 +38,12 @@
 </div>
 
 <script type="text/javascript">
-      var Client_ID = "inzgx27u8pggvqq6fvih3l1x99qnlwcp";
-      var Client_SECRET="F6tZUdCcPmt7fgozSYgYHi2OkwAPashW";
-      var access_token;
-      var refresh_token;
-
+      
       function getParams() {
-      // 파라미터가 담길 배열
+       // 파라미터가 담길 배열
       var param = new Array();
 
-      // 현재 페이지의 url
+       // 현재 페이지의 url
       var url = decodeURIComponent(location.href);
       // url이 encodeURIComponent 로 인코딩 되었을때는 다시 디코딩 해준다.
       url = decodeURIComponent(url);
