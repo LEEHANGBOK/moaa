@@ -5,15 +5,19 @@
 <%@page import="java.sql.DriverManager" %>
 <%@page import="java.sql.ResultSet" %>
 <%@page import="java.sql.Statement" %>
+<%@page import="util.db.MySqlConnection" %>
+
 
 <%
 	String driver = "com.mysql.jdbc.Driver";
 	Class.forName(driver);
 	
+	MySqlConnection mysqlConn = new MySqlConnection();
+    
 	// 관리자 Login
-	String url = "jdbc:mysql://localhost:3306/moaa";
-	String id = "root";
-	String pw = "andrew12345";
+	String url = mysqlConn.getDBurl();
+	String id = mysqlConn.getDBid();
+	String pw = mysqlConn.getDBpw();
 	
 	// 연결
 	Connection conn = DriverManager.getConnection(url, id, pw);
@@ -62,7 +66,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Mission 99 | Dashboard</title>
+  <title>MOAA | Dashboard</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -96,7 +100,7 @@
     <nav class="navbar navbar-static-top">
       <div class="container">
         <div class="navbar-header">
-          <a href="dashboard.jsp" class="navbar-brand"><b>Mission</b>99</a>
+          <a href="dashboard.jsp" class="navbar-brand"><b>MOAA</b></a>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
             <i class="fa fa-bars"></i>
           </button>

@@ -7,6 +7,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import util.db.MySqlConnection;
+
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -58,10 +61,12 @@ public class MakeUserDomain extends HttpServlet {
             String driver = "com.mysql.jdbc.Driver";
             Class.forName(driver);
             
-            	// 관리자 Login
-            String mysql_url = "jdbc:mysql://localhost:3306/moaa";
-            String mysql_id = "root";
-            String mysql_pw = "andrew12345";
+            MySqlConnection mysqlConn = new MySqlConnection();
+	        
+	        	// 관리자 Login
+	        String mysql_url = mysqlConn.getDBurl();
+	        String mysql_id = mysqlConn.getDBid();
+	        String mysql_pw = mysqlConn.getDBpw();
             
             	// 연결
             // users_domain에 user의 도메인 경로를 저장

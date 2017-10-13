@@ -6,6 +6,7 @@
 <%@page import="java.sql.DriverManager" %>
 <%@page import="java.sql.ResultSet" %>
 <%@page import="java.sql.Statement" %>
+<%@page import="util.db.MySqlConnection" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@page import="java.util.*"%>
 
@@ -16,10 +17,12 @@
 	String driver = "com.mysql.jdbc.Driver";
 	Class.forName(driver);
 	
+	MySqlConnection mysqlConn = new MySqlConnection();
+    
 	// 관리자 Login
-	String url = "jdbc:mysql://localhost:3306/moaa";
-	String id = "root";
-	String pw = "andrew12345";
+	String url = mysqlConn.getDBurl();
+	String id = mysqlConn.getDBid();
+	String pw = mysqlConn.getDBpw();
 	
 	// 연결
 	Connection conn = DriverManager.getConnection(url, id, pw);
@@ -43,7 +46,7 @@
 
 
 	//절대경로 입력 시 해당 디렉토리에 있는 파일들을 페이지 상에 출력, 클릭 시 다운로드 가능
-	String saveDir = "/home/andrew/Desktop/Workspace/dirPractice/" + user_domain_path;
+	String saveDir = "/home/andrew/Desktop/Workspace/dirPractice/" + user_domain_path + "/log/info";
 	/* String saveDir = "/home/andrew/Desktop/jpg"; */
 	File dir = new File(saveDir);
 	File[] fileList = dir.listFiles(); 
@@ -59,7 +62,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Mission 99 | Dashboard</title>
+  <title>MOAA | Dashboard</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -156,9 +159,9 @@
     <!-- Logo -->
     <a href="index.jsp" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>M</b>99</span>
+      <span class="logo-mini"><b>M</b>oaa</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Mission</b>99</span>
+      <span class="logo-lg"><b>MOAA</b></span>
     </a>
 
     <!-- Header Navbar: style can be found in header.less -->
@@ -307,6 +310,7 @@
 
                 <p>
                   <%= user_name %>
+                  	  <!-- 디비에서 등록 시간 가져오기 -->
                   <small>Member since Nov. 2012</small>
                 </p>
               </li>
@@ -496,107 +500,120 @@
                     	String tempFileName=tempFile.getName();
                         int j= tempFileName.indexOf(".");
                     	switch(tempFileName.substring(j+1)){
-                    	case "pdf":
-                    		%><img src="etc/iconimage/icon_pdf.png" width="23" height="23">
-                    		<%
-                    	break;
-                    	case "jpg":
-                    		%>
-                    		<img src="etc/iconimage/icon_jpg.png" width="23" height="23">
-                    	<%
-                    	break;
-                    	case "png":
-                    		%>
-                    		<img src="etc/iconimage/icon_png.png" width="23" height="23">
-                    		<%
-                    	break;
-                    	case "PNG":
-                    		%>
-                    		<img src="etc/iconimage/icon_png.png" width="23" height="23">
-                    	<%
-                    	break;
-                    	case "html":
-                    		%>
-                    		<img src="etc/iconimage/icon_html.png" width="23" height="23">
-                    	<%
-                    	break;
-                    	case "css":
-                    		%>
-                    		<img src="etc/iconimage/icon_css.png" width="23" height="23">
-                    	<%
-                    	break;
-                    	case "xlsx":
-                    		%>
-                    		<img src="etc/iconimage/icon_excel.png" width="23" height="23">
-                    	<%
-                    	break;
-                    	case "exe":
-                    		%>
-                    		<img src="etc/iconimage/icon_exe.png" width="23" height="23">
-                    		<%
-                    	break;
-                    	case "mp3":
-                    		%>
-                    		<img src="etc/iconimage/icon_mp3.png" width="23" height="23">
-                    		<%
-                    	break;
-                    	case "txt":
-                    		%>
-                    		<img src="etc/iconimage/icon_txt.png" width="23" height="23">
-                    	<%
-                    	break;
-                    	case "pptx":
-                    		%>
-                    		<img src="etc/iconimage/icon_powerpoint.png" width="23" height="23">
-                    	<%
-                    	break;
-                    	case "avi":
-                    		%>
-                    		<img src="etc/iconimage/icon_avi.png" width="23" height="23">
-                    		<%
-                    	break;
-                    	case "wmv":
-                    		%>
-                    		<img src="etc/iconimage/icon_video.png" width="23" height="23">
-                    	<%
-                    	break;
-                    	case "mp4":
-                    		%>
-                    		<img src="etc/iconimage/icon_mp4.png" width="23" height="23">
-                    		<%
-                    	break;
-                    	case "docx":
-                    		%>
-                    		<img src="etc/iconimage/icon_word.png" width="23" height="23">
-                    		<%
-                    	break;
-                    	case "war":
-                    		%>
-                    		<img src="etc/iconimage/icon_zip.png" width="23" height="23">
-                    		<%
-                    	break;
-                    	case "zip":
-                    		%>
-                    		<img src="etc/iconimage/icon_zip.png" width="23" height="23">
-                    		<%
-                    	break;
-                    	default : 
-                    		%>
-                    		<img src="etc/iconimage/icon_default.png" width="23" height="23">
-                    		<%
-                    	}
+	                    	case "pdf":
+	                    		%>
+	                    		<img src="etc/iconimage/icon_pdf.png" width="23" height="23">
+	                    		<%
+	                    	break;
+	                    	case "jpg":
+	                    		%>
+	                    		<img src="etc/iconimage/icon_jpg.png" width="23" height="23">
+	                    		<%
+	                    	break;
+	                    	case "png":
+	                    		%>
+	                    		<img src="etc/iconimage/icon_png.png" width="23" height="23">
+	                    		<%
+	                    	break;
+	                    	case "PNG":
+	                    		%>
+	                    		<img src="etc/iconimage/icon_png.png" width="23" height="23">
+	                    	<%
+	                    	break;
+	                    	case "html":
+	                    		%>
+	                    		<img src="etc/iconimage/icon_html.png" width="23" height="23">
+	                    		<%
+	                    	break;
+	                    	case "css":
+	                    		%>
+	                    		<img src="etc/iconimage/icon_css.png" width="23" height="23">
+	                    		<%
+	                    	break;
+	                    	case "xlsx":
+	                    		%>
+	                    		<img src="etc/iconimage/icon_excel.png" width="23" height="23">
+	                    		<%
+	                    	break;
+	                    	case "exe":
+	                    		%>
+	                    		<img src="etc/iconimage/icon_exe.png" width="23" height="23">
+	                    		<%
+	                    	break;
+	                    	case "mp3":
+	                    		%>
+	                    		<img src="etc/iconimage/icon_mp3.png" width="23" height="23">
+	                    		<%
+	                    	break;
+	                    	case "txt":
+	                    		%>
+	                    		<img src="etc/iconimage/icon_txt.png" width="23" height="23">
+	                    		<%
+	                    	break;
+	                    	case "pptx":
+	                    		%>
+	                    		<img src="etc/iconimage/icon_powerpoint.png" width="23" height="23">
+	                    		<%
+	                    	break;
+	                    	case "avi":
+	                    		%>
+	                    		<img src="etc/iconimage/icon_avi.png" width="23" height="23">
+	                    		<%
+	                    	break;
+	                    	case "wmv":
+	                    		%>
+	                    		<img src="etc/iconimage/icon_video.png" width="23" height="23">
+	                    		<%
+	                    	break;
+	                    	case "mp4":
+	                    		%>
+	                    		<img src="etc/iconimage/icon_mp4.png" width="23" height="23">
+	                    		<%
+	                    	break;
+	                    	case "docx":
+	                    		%>
+	                    		<img src="etc/iconimage/icon_word.png" width="23" height="23">
+	                    		<%
+	                    	break;
+	                    	case "war":
+	                    		%>
+	                    		<img src="etc/iconimage/icon_zip.png" width="23" height="23">
+	                    		<%
+	                    	break;
+	                    	case "zip":
+	                    		%>
+	                    		<img src="etc/iconimage/icon_zip.png" width="23" height="23">
+	                    		<%
+	                    	break;
+	                    	default : 
+	                    		%>
+	                    		<img src="etc/iconimage/icon_default.png" width="23" height="23">
+	                    		<%
+	                    	}
                     	%>
                     	</td>                 
-                    	<td width="68%"><%
-                        out.write("<a href=\"" + request.getContextPath() + "/FileDownload?filename=" + java.net.URLEncoder.encode(tempFileName, "UTF-8") + "\">" + tempFileName.substring(0,j) + "</a><br>");
-                        %></td>                        
-                        <td width="7%"><%
-                        out.println(tempFileName.substring(j+1));%></td>                  
-                           <td width="7%"><%
+                    	<td width="68%">
+	                    	<%
+	                    		// 이부분 파일에서 파일 이름 가져오기
+	                    		// 파일 이름
+	                        out.write("<a href=\"" + request.getContextPath() + "/FileDownload?filename=" + java.net.URLEncoder.encode(tempFileName, "UTF-8") + "\">" + tempFileName.substring(0,j) + "</a><br>");
+	                        %>
+                        </td>                        
+                        <td width="7%">
+	                        <%
+	                        	// 확장자
+	                        out.println(tempFileName.substring(j+1));
+	                        %>
+                        </td>                  
+                        <td width="7%">
+                        
+                        <%
+                        		// 용량
+                        		// 파일에서 용량 가져오기
                      		long length = tempFile.length();
-                           double LengthbyUnit = (double)length;
-                           int Unit=0;
-                           while(LengthbyUnit >1024 && Unit<5){
+                           	double LengthbyUnit = (double)length;
+                           	int Unit=0;
+                           	while(LengthbyUnit >1024 && Unit<5){
                               LengthbyUnit = LengthbyUnit/1024;
                               Unit++;
                            }
@@ -620,17 +637,19 @@
                            break;
                            }
                               
-                           %></td>
+                           %>
+                        </td>
 
 
-                        <td width="10%"><%   
+                        <td width="10%">
+                        <%   
+                        		// 업로드 시간
                               long lastModified = tempFile.lastModified();
                               Date date = new Date(lastModified);
                               SimpleDateFormat sfd = new SimpleDateFormat("yyyy/MM/dd hh:mm");
                               out.println(sfd.format(date));
-
-                         }
-                      }
+	                         }
+	                      }
                        %>
                         </td>
                   </tr>
@@ -642,25 +661,25 @@
               <div class="btn_icon" style="display: none;">
                <form>
                  <ul id="checkboxTbl" style="list-style-type: none; margin:0; padding:0;">
-
-                 	                 <%
+                  <%
                   for(File tempFile : fileList){
                      if(tempFile.isFile()) {
                   %>
                  		<li style = "padding-top: 30px; padding-left:30px; padding-right:50px; float:left;">
-                 			<input type="checkbox" name="selectfile" value="1" /><p>
-                 			<%
+               			<input type="checkbox" name="selectfile" value="1" /><p>
+              			<%
                     	String tempFileName=tempFile.getName();
                         int j= tempFileName.indexOf(".");
                     	switch(tempFileName.substring(j+1)){
                     	case "pdf":
-                    		%><img src="etc/iconimage/icon_pdf.png" width="120" height="120">
+                    		%>
+                    		<img src="etc/iconimage/icon_pdf.png" width="120" height="120">
                     		<%
                     	break;
                     	case "jpg":
                     		%>
                     		<img src="etc/iconimage/icon_jpg.png" width="120" height="120">
-                    	<%
+                    		<%
                     	break;
                     	case "png":
                     		%>

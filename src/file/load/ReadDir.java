@@ -20,46 +20,46 @@ public class ReadDir {
 	
 	public void read(String dir, int drive_count) {
 		String path=dir;
-				File dirFile=new File(path);
-				File []fileList=dirFile.listFiles();
-				int size = fileList.length;
-				
-				//totallist = new String[size];
-				
-				int drivesize = size/drive_count+1;
-				int flag =0;
-				int fluence = 0;
-				Googlelist = new String[drivesize];
-				Boxlist = new String[drivesize];
-				Droplist = new String[drivesize];
-				for(File tempFile : fileList) {
-				  if(tempFile.isFile()) {
-				    String tempPath=tempFile.getParent();
-				    String tempFileName=tempFile.getName();
-				    System.out.println("Path="+tempPath);
-				    System.out.println("FileName="+tempFileName);
+		File dirFile=new File(path);
+		File []fileList=dirFile.listFiles();
+		int size = fileList.length;
+		
+		//totallist = new String[size];
+		
+		int drivesize = size/drive_count+1;
+		int flag =0;
+		int fluence = 0;
+		Googlelist = new String[drivesize];
+		Boxlist = new String[drivesize];
+		Droplist = new String[drivesize];
+		for(File tempFile : fileList) {
+		  if(tempFile.isFile()) {
+		    String tempPath=tempFile.getParent();
+		    String tempFileName=tempFile.getName();
+		    System.out.println("Path="+tempPath);
+		    System.out.println("FileName="+tempFileName);
 
-				    switch(flag) {
-				    case 0  :System.out.println("G: " + flag +", fluence :" + fluence + ", size : "+ Googlelist.length); 
-				    	Googlelist[fluence] = tempPath+System.getProperty("file.separator")+tempFileName;
-				    			flag = 1;
-				    			break;
-				    case 1  :System.out.println("B: " + flag +", fluence :" + fluence + ", size : "+ Boxlist.length); 
-				    	Boxlist[fluence] = tempPath+System.getProperty("file.separator")+tempFileName;
-	    						flag = 2;
-	    						break;
-	    					
-				    case 2  : System.out.println("D: " + flag +", fluence :" + fluence + ", size : "+ Droplist.length);   
-				    	Droplist[fluence] = tempPath+System.getProperty("file.separator")+tempFileName;
-				    			flag = 0;
-				    			fluence++;
-				    			break;
-				    	default : System.out.println("finish");
-				    			break;
-				    }
-				    
-				  }
-				}
+		    switch(flag) {
+		    case 0  :System.out.println("G: " + flag +", fluence :" + fluence + ", size : "+ Googlelist.length); 
+		    	Googlelist[fluence] = tempPath+System.getProperty("file.separator")+tempFileName;
+		    			flag = 1;
+		    			break;
+		    case 1  :System.out.println("B: " + flag +", fluence :" + fluence + ", size : "+ Boxlist.length); 
+		    	Boxlist[fluence] = tempPath+System.getProperty("file.separator")+tempFileName;
+						flag = 2;
+						break;
+					
+		    case 2  : System.out.println("D: " + flag +", fluence :" + fluence + ", size : "+ Droplist.length);   
+		    	Droplist[fluence] = tempPath+System.getProperty("file.separator")+tempFileName;
+		    			flag = 0;
+		    			fluence++;
+		    			break;
+		    	default : System.out.println("finish");
+		    			break;
+		    }
+		    
+		  }
+		}
 	}
 		
 	public String[] getBoxlist(){

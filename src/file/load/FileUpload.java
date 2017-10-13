@@ -25,6 +25,7 @@ import drives.google.GoogleUp;
 import file.distribution.Check;
 import file.distribution.Distribution;
 import user.domain.CreateDirectory;
+import util.db.MySqlConnection;
 
 /**
  * Servlet implementation class FileUpload
@@ -63,10 +64,12 @@ public class FileUpload extends HttpServlet {
 			String driver = "com.mysql.jdbc.Driver";
 			Class.forName(driver);
 			
-			// 관리자 Login
-			String url = "jdbc:mysql://localhost:3306/moaa";
-			String id = "root";
-			String pw = "andrew12345";
+			MySqlConnection mysqlConn = new MySqlConnection();
+	        
+	        	// 관리자 Login
+	        String url = mysqlConn.getDBurl();
+	        String id = mysqlConn.getDBid();
+	        String pw = mysqlConn.getDBpw();
 			
 			// 연결
 			Connection conn = DriverManager.getConnection(url, id, pw);
@@ -271,6 +274,7 @@ public class FileUpload extends HttpServlet {
 				box.start();
 				drop.start();
 				google.start();
+				
 				threadList.add(box);
 				threadList.add(drop);
 				threadList.add(google);

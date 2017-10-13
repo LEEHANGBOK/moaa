@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import util.db.MySqlConnection;
+
 /**
  * Servlet implementation class GoogleToken
  */
@@ -41,10 +43,12 @@ public class GoogleToken extends HttpServlet {
 	        String driver = "com.mysql.jdbc.Driver";
 	        Class.forName(driver);
 	        
-	         // 관리자 Login
-	        String url = "jdbc:mysql://localhost:3306/moaa";
-	        String id = "root";
-	        String pw = "andrew12345";
+	        MySqlConnection mysqlConn = new MySqlConnection();
+	        
+	        	// 관리자 Login
+	        String url = mysqlConn.getDBurl();
+	        String id = mysqlConn.getDBid();
+	        String pw = mysqlConn.getDBpw();
 	        
 	        // 연결
 	        Connection conn = DriverManager.getConnection(url, id, pw);

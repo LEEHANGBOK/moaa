@@ -6,7 +6,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>Mission99</title>
+    <title>MOAA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="this is for mission99 project intro page">
     <meta name="author" content="mission99">
@@ -51,7 +51,7 @@ experience.
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-                <a class="navbar-brand" href="#top-section">mission99</a>
+                <a class="navbar-brand" href="#top-section">MOAA</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">

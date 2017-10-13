@@ -19,6 +19,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import drives.box.GetBoxToken;
+import util.db.MySqlConnection;
 /**
  * Servlet implementation class BoxToken
  */
@@ -77,10 +78,12 @@ public class BoxToken extends HttpServlet {
 	        String driver = "com.mysql.jdbc.Driver";
 	        Class.forName(driver);
 	        
-	         // 관리자 Login
-	        String url = "jdbc:mysql://localhost:3306/moaa";
-	        String id = "root";
-	        String pw = "andrew12345";
+	        MySqlConnection mysqlConn = new MySqlConnection();
+	        
+	        	// 관리자 Login
+	        String url = mysqlConn.getDBurl();
+	        String id = mysqlConn.getDBid();
+	        String pw = mysqlConn.getDBpw();
 	        
 	        // 연결
 	        Connection conn = DriverManager.getConnection(url, id, pw);
