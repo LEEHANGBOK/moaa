@@ -26,6 +26,7 @@ import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import drives.box.BoxUp;
 import drives.dropbox.DropboxUp;
 import drives.google.GoogleUp;
+import file.delete.FileDelete;
 import file.distribution.Check;
 import file.distribution.Distribution;
 import file.readwrite.WriteLog;
@@ -193,6 +194,7 @@ public class FileUpload extends HttpServlet {
 			String file1 =(String)files.nextElement(); 
 			System.out.println("file1: " + file1);
 			
+			// file name
 			filename1=m.getFilesystemName(file1);
 			System.out.println("file name: " + filename1);
 			
@@ -239,16 +241,6 @@ public class FileUpload extends HttpServlet {
 				//나중에 zip 결합을 위해 확장자 빼고 이름만, 임시저장하기 위해 확장자까지)
 				d.distribution(cloudDirectory, size/cloudNumber, onlyName, fullPath, user_domain_path);
 				
-				File selectedOrgDir = new File(dir);
-				File[] innerOrgFiles= selectedOrgDir.listFiles(); 
-				int dirOrgListLen = innerOrgFiles.length;
-				int targetOrgFileIndex=0;
-				for(int i = 0 ; i < dirOrgListLen; i++) {
-					if(innerOrgFiles[i].getName() == filename1) {
-						targetOrgFileIndex = i;
-						break;
-					}
-				}
 				
 				// 단일 업로드
 				File dirforlog = new File(fullPath);
@@ -267,12 +259,11 @@ public class FileUpload extends HttpServlet {
 				String logupdate = Integer.toString(year)+"/"+Integer.toString(month)+"/"+Integer.toString(day)+","+Integer.toString(hour)+":"+Integer.toString(minute);
 				
 				
-				if(innerOrgFiles[targetOrgFileIndex].exists()) {
-					innerOrgFiles[targetOrgFileIndex].delete();
-					System.out.println("[Knowing] After separating original file, the original file is successfully deleted!");
-				} else {
-					System.out.println("[Warning] There is no that such original file!");
-				}
+				FileDelete fileDelete = new FileDelete();
+				
+				// 원본파일 삭제 filename1 은 풀네임
+				fileDelete.deleteOrgDir(dir, filename1);
+				
 				
 				System.out.println("file size: " + size );
 				
@@ -310,21 +301,8 @@ public class FileUpload extends HttpServlet {
 				
 				// 분할된 파일 엽로드 완료후 삭제
 				// 해당 파일의 이름을 가진 파일은 모두 삭제
-				File selectedSprDir = new File(cloudDirectory);
-				File[] innerSprFiles= selectedSprDir.listFiles(); 
-				int dirListLen = innerSprFiles.length;
-				for(int i = 0 ; i < dirListLen; i++) {
-					String sprFileName = innerSprFiles[i].getName();
-					if(sprFileName.contains(onlyName)) {
-						innerSprFiles[i].delete();
-						System.out.println("[Knowing] " + sprFileName + "is successfully deleted!");
-					}
-				}
-				if(innerSprFiles.length == dirListLen) {
-					System.out.println("[Warning] There were no that such separated files!");
-				}
 				
-				
+				fileDelete.deleteSprDir(cloudDirectory, onlyName);
 				
 				System.out.println("------------ Finish ------------ ");
 				

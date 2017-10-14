@@ -22,6 +22,8 @@ import javax.servlet.http.HttpSession;
 import drives.box.BoxDown;
 import drives.dropbox.DropboxDown;
 import drives.google.GoogleDown;
+import file.delete.FileDelete;
+import file.distribution.Check;
 import file.load.Final;
 import file.load.Unzip;
 import file.load.ReadLogFile;
@@ -181,10 +183,6 @@ public class FileDownload extends HttpServlet {
 	   }
 	   
 	   FilePath filePath = new FilePath(user_domain_path);
-	   filePath.getDownOrgPath();
-	   filePath.getDownSprPath();
-	   filePath.getLoadPath();
-	   
 	
 		// 클라우드별 로그파일 저장경로
 		String google_directory = filePath.getLoadPath() + System.getProperty("file.separator") + loadFileDir + System.getProperty("file.separator") + "logfile_Google.txt";	
@@ -198,7 +196,7 @@ public class FileDownload extends HttpServlet {
 		String orgDirectory = filePath.getDownOrgPath() + System.getProperty("file.separator");
 
 		// 원본파일 이름 (압축풀때 필요)
-		String orgFilename= filename;
+		String orgFilename = filename;
 		
 		System.out.println(orgFilename);
 
@@ -206,8 +204,9 @@ public class FileDownload extends HttpServlet {
 		Unzip unzip = new Unzip();
 		Final finalFile = new Final();
 	   
-	   
-	   
+		// 확장자 제외 파일이름
+		String[] onlyNameArr = orgFilename.split("\\.");
+		String onlyName = onlyNameArr[0];
 	   
 	   
 	   
@@ -254,6 +253,14 @@ public class FileDownload extends HttpServlet {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		
+		// 임시 분할파일 삭제
+		
+		FileDelete fileDelete = new FileDelete();
+		
+		fileDelete.deleteSprDir(filePath.getDownSprPath(), onlyName);
+		
+		
 	
 	
 //		// 서버상에 원본 파일이 저장되어있는 경로. (tmp/Download/org/)
@@ -265,7 +272,7 @@ public class FileDownload extends HttpServlet {
 		File file = new File(orgDirectory + System.getProperty("file.separator") + filename);
 		System.out.println("파일명 : " + filename);
 		
-		// 다운로드 시작
+		  // 다운로드 시작
 		 String mimeType = getServletContext().getMimeType(file.toString());
 		 
          if(mimeType == null)
@@ -302,6 +309,10 @@ public class FileDownload extends HttpServlet {
          servletOutputStream.flush();
          servletOutputStream.close();
          fileInputStream.close();
+         
+          // 임시 원본파일 삭제
+         fileDelete.deleteOrgDir(filePath.getDownOrgPath(), orgFilename);
+         
          
          response.sendRedirect("dashboard.jsp");
    }
