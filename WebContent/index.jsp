@@ -71,7 +71,7 @@ experience.
 					    // 현재 로그인된 아이디가 있다면 (= session에 저장된 id가 있다면)
 					    else {
 					%>
-					<li><a href="dashboard.jsp">Dash Board</a></li>
+					<li><a href="dashboard2.jsp">Dash Board</a></li>
 					<li><a href="logout_check">Log out</a></li>
 					<% } %>
                 </ul>

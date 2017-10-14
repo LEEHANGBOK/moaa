@@ -14,6 +14,7 @@ public class FilePath {
 	
 	String loadPath;
 	
+	
 	public FilePath(String user_domain_path){
 		
 		this.upOrgPath = "/home/andrew/Desktop/Workspace/dirPractice/" + user_domain_path +"/tmp/Upload/org";

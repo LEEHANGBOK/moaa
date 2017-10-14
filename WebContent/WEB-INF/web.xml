@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
-  
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
     <welcome-file>sign_in.jsp</welcome-file>
@@ -87,5 +86,13 @@
   <servlet-mapping>
     <servlet-name>FileDownload</servlet-name>
     <url-pattern>/file_download</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>DeleteDriveFile</servlet-name>
+    <servlet-class>drives.delete.DeleteDriveFile</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DeleteDriveFile</servlet-name>
+    <url-pattern>/delete_drive_file</url-pattern>
   </servlet-mapping>
 </web-app>
