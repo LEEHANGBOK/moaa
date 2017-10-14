@@ -2,11 +2,15 @@ package file.load;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Enumeration;
 
 import javax.servlet.ServletException;
@@ -24,6 +28,7 @@ import drives.dropbox.DropboxUp;
 import drives.google.GoogleUp;
 import file.distribution.Check;
 import file.distribution.Distribution;
+import file.readwrite.WriteLog;
 import user.domain.CreateDirectory;
 import util.db.MySqlConnection;
 
@@ -244,6 +249,24 @@ public class FileUpload extends HttpServlet {
 						break;
 					}
 				}
+				
+				// 단일 업로드
+				File dirforlog = new File(fullPath);
+				String logname = onlyName;
+				Path logsource = Paths.get(dir);
+				String logtype = onlyExt;
+				long logsize = dirforlog.length();
+				Calendar cal = Calendar.getInstance();
+				
+				int year = cal.get(Calendar.YEAR);
+				int month = cal.get(Calendar.MONTH);
+				int day = cal.get(Calendar.DAY_OF_MONTH);
+				int hour = cal.get(Calendar.HOUR);
+				int minute = cal.get(Calendar.MINUTE);
+				
+				String logupdate = Integer.toString(year)+"/"+Integer.toString(month)+"/"+Integer.toString(day)+","+Integer.toString(hour)+":"+Integer.toString(minute);
+				
+				
 				if(innerOrgFiles[targetOrgFileIndex].exists()) {
 					innerOrgFiles[targetOrgFileIndex].delete();
 					System.out.println("[Knowing] After separating original file, the original file is successfully deleted!");
@@ -304,6 +327,13 @@ public class FileUpload extends HttpServlet {
 				
 				
 				System.out.println("------------ Finish ------------ ");
+				
+				//finish 이후 로그파일 생성 
+				WriteLog write = new WriteLog(logname, logtype, logsize, logupdate);
+				
+				//사용자 도메인 = path
+				write.write(user_domain_path);
+				
 				
 				response.sendRedirect("dashboard.jsp");
 				

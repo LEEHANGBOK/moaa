@@ -41,7 +41,8 @@ public class GoogleUp extends Thread {
 		for(String path : filepath) {
 			if(path!=null) {
 	    	int n = path.lastIndexOf("/");
-	    	int s = path.lastIndexOf(".");
+	    		// 수정된 부분 => 원래 indexof(.)
+	    	int s = path.length();
 	    	Path source = Paths.get(path);
 	    	
 	    		//저장된 파일경

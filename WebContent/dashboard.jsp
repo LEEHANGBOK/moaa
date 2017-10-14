@@ -7,6 +7,7 @@
 <%@page import="java.sql.ResultSet" %>
 <%@page import="java.sql.Statement" %>
 <%@page import="util.db.MySqlConnection" %>
+<%@page import="file.readwrite.ReadLog" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@page import="java.util.*"%>
 
@@ -437,7 +438,8 @@
 							var curStyle=document.getElementById("file").style.display;
 								document.getElementById("file").style.display="none";
 						</script> -->
-						<button id="newFile" type="submit" class="btn btn-default">올리기</button>
+						<button id="newFile" type="submit" class="btn btn-default">업로드</button>
+						
 						<!-- onclick="check()" -->
 						<!-- <script>
 						 	function check(){
@@ -457,8 +459,8 @@
 					 		}
 					 	</script> -->
 				 	</form> 	
-						<!-- <button type="button" class="btn btn-default">내려받기</button>
-	                    <button type="button" class="btn btn-default">삭제</button> -->
+						
+	                    <!-- button type="button" class="btn btn-default">삭제</button> -->
 					 	
 									
 				</div>
@@ -466,7 +468,6 @@
 				<div class="btn-group pull-right">
                         <button type="button" class="btn btn-default btn_show"><i class="fa fa-list"></i></button>
                         <button type="button" class="btn btn-default btn_hide"><i class="fa fa-th"></i></button>
-                        
                  </div>       
 				 	
           
@@ -475,7 +476,9 @@
             <div class="box-body">
             <div class="btn_list">
 			<div class="table-responsive">
-               <form>
+			
+			<form action="file_download" method="post">
+				<button type="submit" >다운로드</button>
                  <table id="checkboxTbl" class="table no-margin">
                   <thead>
                   <tr>
@@ -490,16 +493,44 @@
                   <tbody>
                   
                   <%
-	                  for(File tempFile : fileList){
-	                     if(tempFile.isFile()) {
+					  ReadLog readLog = new ReadLog();    
+	                  //for(File tempFile : fileList   )
+	                  for(int k = 0 ; k < fileList.length ; k++ ){ 
+	                	  File tempFile = fileList[k];
+	                      if(tempFile.isFile()) {
+	                    	 Map<String, String> fileData = readLog.write(tempFile);
+	                    	 String[] dataToSend = new String[fileList.length];
+	                    	 dataToSend[k] = fileData.get("name") + "_" + fileData.get("type");
+	                    	 
+	                    	 
                   %>
-                    <tr>
-                    	
-                    	<td width="3%"><input type="checkbox" name="selectfile" value="1" /></td> 
-                    	<td width="5%"><%
-                    	String tempFileName=tempFile.getName();
-                        int j= tempFileName.indexOf(".");
-                    	switch(tempFileName.substring(j+1)){
+                  <!-- <form action="file_download" method="post" name="form1"> -->
+                    <tr id="<%= k %>">
+                    	<%
+	                    	String tempFileName=tempFile.getName();
+	                        int j= tempFileName.indexOf(".");
+                    	%>
+                    	<%-- <%= dataToSend[k] %> --%>
+                    	<td width="3%">
+                    		<input type="checkbox" name="file_name" value="<%=fileData.get("name") %>_<%=fileData.get("type") %>" onclick="check_only(this)"/>
+				       		<script type="text/javascript">
+							
+							    function check_only(chk){
+							        var obj = document.getElementsByName("file_name");
+							        for(var i=0; i<obj.length; i++){
+							            if(obj[i] != chk){
+							                obj[i].checked = false;
+							            }
+							        }
+							    }
+							
+							</script>
+                    	</td> 
+                    	<td width="5%">
+                    	<%
+	
+                    	String extenstion_1st = fileData.get("type");
+                    	switch(extenstion_1st){
 	                    	case "pdf":
 	                    		%>
 	                    		<img src="etc/iconimage/icon_pdf.png" width="23" height="23">
@@ -596,19 +627,26 @@
 	                    	<%
 	                    		// 이부분 파일에서 파일 이름 가져오기
 	                    		// 파일 이름
-	                        out.write("<a href=\"" + request.getContextPath() + "/FileDownload?filename=" + java.net.URLEncoder.encode(tempFileName, "UTF-8") + "\">" + tempFileName.substring(0,j) + "</a><br>");
+	                    	String filename = fileData.get("name");
+	                    	out.write(filename);
+	                        /* out.write("<a href=\"" + request.getContextPath() + "/FileDownload?filename=" + java.net.URLEncoder.encode(tempFileName, "UTF-8") + "\">" + tempFileName.substring(0,j) + "</a><br>"); */
 	                        %>
-                        </td>                        
+                        </td>           
+                                     
                         <td width="7%">
 	                        <%
 	                        	// 확장자
-	                        out.println(tempFileName.substring(j+1));
+	                        
+	                        String extenstion = fileData.get("type");
+	                        out.write(extenstion);
+	                        	
+	                        /* out.println(tempFileName.substring(j+1)); */
 	                        %>
                         </td>                  
                         <td width="7%">
                         
                         <%
-                        		// 용량
+                        		/* // 용량
                         		// 파일에서 용량 가져오기
                      		long length = tempFile.length();
                            	double LengthbyUnit = (double)length;
@@ -635,7 +673,10 @@
                            case 4:
                            out.println("TB");
                            break;
-                           }
+                           } */
+                           
+                           String fileLength = fileData.get("size");
+                           out.write(fileLength);
                               
                            %>
                         </td>
@@ -644,18 +685,26 @@
                         <td width="10%">
                         <%   
                         		// 업로드 시간
-                              long lastModified = tempFile.lastModified();
+                              /* long lastModified = tempFile.lastModified();
                               Date date = new Date(lastModified);
                               SimpleDateFormat sfd = new SimpleDateFormat("yyyy/MM/dd hh:mm");
-                              out.println(sfd.format(date));
+                              out.println(sfd.format(date)); */
+                              
+                              String uploadedTime = fileData.get("time");
+                              out.write(uploadedTime);
+                              
+                              
+                              
 	                         }
 	                      }
                        %>
                         </td>
-                  </tr>
+                  	</tr>
+                  <!-- </form> -->
                   </tbody>
                 </table>
                 </form>
+                <!-- </form> -->
               </div>
               </div>
               <div class="btn_icon" style="display: none;">
@@ -664,13 +713,13 @@
                   <%
                   for(File tempFile : fileList){
                      if(tempFile.isFile()) {
+                    	 Map<String, String> fileData = readLog.write(tempFile);
                   %>
                  		<li style = "padding-top: 30px; padding-left:30px; padding-right:50px; float:left;">
                			<input type="checkbox" name="selectfile" value="1" /><p>
               			<%
-                    	String tempFileName=tempFile.getName();
-                        int j= tempFileName.indexOf(".");
-                    	switch(tempFileName.substring(j+1)){
+              			String extenstion_1st = fileData.get("type");
+                    	switch(extenstion_1st){
                     	case "pdf":
                     		%>
                     		<img src="etc/iconimage/icon_pdf.png" width="120" height="120">
@@ -764,37 +813,16 @@
                     	%><p>
                     	<div align="center">
                     	<%
-                        out.write("<a href=\"" + request.getContextPath() + "/FileDownload?filename=" + java.net.URLEncoder.encode(tempFileName, "UTF-8") + "\">" + tempFileName.substring(0,j) + "</a><br>");
-                        %></div><p>
+                    	String filename = fileData.get("name");
+                    	out.write(filename);
+                        %>
+                        </div><p>
                         <div align="center" style="color:  #808080">
                         <%
-                     		long length = tempFile.length();
-                           double LengthbyUnit = (double)length;
-                           int Unit=0;
-                           while(LengthbyUnit >1024 && Unit<5){
-                              LengthbyUnit = LengthbyUnit/1024;
-                              Unit++;
-                           }
-                           DecimalFormat df = new DecimalFormat("#,##0.00");
-                           out.println(df.format(LengthbyUnit));
-                           switch(Unit){
-                           case 0:
-                           out.println("Bytes");
-                           break;
-                           case 1:
-                           out.println("KB");
-                           break;
-                           case 2:
-                           out.println("MB");
-                           break;
-                           case 3:
-                           out.println("GB");
-                           break;
-                           case 4:
-                           out.println("TB");
-                           break;
-                           }                           
-                           %></div>
+	                        String fileLength = fileData.get("size");
+	                        out.write(fileLength);
+                           %>
+                           </div>
                  		</li>
                  		<%
                      }
