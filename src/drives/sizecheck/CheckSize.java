@@ -1,4 +1,4 @@
-package drives.siizecheck;
+package drives.sizecheck;
 
 
 public class CheckSize {

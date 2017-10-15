@@ -74,7 +74,9 @@
           google_token = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token
           if(google_token != null){
         	  location.href="google_token?google_token="+google_token;
+        	  window.opener.location.relaod(true);
         	  alert("토큰 : " + google_token + "\n토큰을 성공적으로 받아왔습니다!");  
+        	  window.close();
           } else {
         	  alert("먼저 인증을 해주세요");
           }

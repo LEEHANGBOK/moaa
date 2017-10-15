@@ -8,6 +8,9 @@
 <%@page import="java.sql.Statement"%>
 <%@page import="util.db.MySqlConnection"%>
 <%@page import="file.readwrite.ReadLog"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.util.HashMap"%>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@page import="java.util.*"%>
@@ -391,13 +394,13 @@
 				<ul class="sidebar-menu" data-widget="tree">
 					<li class="header">MAIN NAVIGATION</li>
 					<li><a href="dashboard.jsp"><i class="fa fa-dashboard"></i><span>
-								Dashboard </span></a></li>
+								대쉬보드 </span></a></li>
 					<li><a href="setting.jsp"><i class="fa fa-cogs"></i><span>
-								Setting </span></a></li>
+								설정 </span></a></li>
 
 
 					<li class="treeview"><a href="#"> <i class="fa fa-cloud"></i>
-							<span>My Drive</span> <span class="pull-right-container">
+							<span>내 드라이브</span> <span class="pull-right-container">
 								<i class="fa fa-angle-left pull-right"></i>
 						</span>
 					</a>
@@ -408,11 +411,11 @@
 									class="fa fa-dropbox"></i> Dropbox</a></li>
 						</ul></li>
 					<li><a href="#"><i class="fa fa-user"></i><span>
-								Account </span></a></li>
+								계정관리 </span></a></li>
 					<li><a href="#"><i class="fa fa-comment"></i><span>
-								How to Use </span></a></li>
+								사용법 </span></a></li>
 					<li><a href="#"><i class="fa fa-users"></i><span>
-								Developer </span></a></li>
+								개발자</span></a></li>
 					<li>
 				</ul>
 			</section>
@@ -438,13 +441,59 @@
 
 			<section class="content">
 				<!-- Info boxes -->
-
+			<a href="check_drive_size" class="btn button fa fa-refresh"> 차트 새로고침</a>
+										
+					 <%
+						Map<String, String> Gdrives = null;
+						Map<String, String> Ddrives = null;
+						Map<String, String> Bdrives = null;
+							
+						
+						ArrayList<Object> receivemap = (ArrayList<Object>)request.getAttribute("driveSizes");
+						double Gusedsize = 0;
+						double Dusedsize = 0;
+						double Busedsize = 0;
+						
+						int igooglesize = 0;
+						int idropboxsize = 0;
+						int iboxsize = 0;
+						
+						if(receivemap!=null)	{
+						
+							Gdrives = (Map<String,String>)receivemap.get(0);
+							Ddrives = (Map<String,String>)receivemap.get(1);
+							Bdrives = (Map<String,String>)receivemap.get(2);
+							
+							Gusedsize = Double.parseDouble(Gdrives.get("size"));
+							igooglesize = (int) Gusedsize;
+							
+							Dusedsize = Double.parseDouble(Ddrives.get("size"));
+							idropboxsize = (int) Dusedsize;
+							
+							Busedsize = Double.parseDouble(Bdrives.get("size"));
+							iboxsize = (int) Busedsize;
+							System.out.println("google used siez : " + Gdrives.get("size")+ " "+Gdrives.get("exp"));
+							
+							/* googlesize = Gdrives.get("size"); */
+							System.out.println("Drop used siez : " + Ddrives.get("size")+ " "+Ddrives.get("exp"));
+							System.out.println("Box used siez : " + Bdrives.get("size")+ " "+Bdrives.get("exp"));
+							
+						} 
+						
+						if(receivemap != null) {
+							/* System.out.println(drives.get("google")); */
+							System.out.println("Gusedsize" + Gusedsize);
+						} else {
+							System.out.println("drives is null!!");
+						}
+					%>
+			
 				<div class="row">
 					<div class="col-md-4">
-						<div class="box box-primary">
+						<div class="box box-primary" style="border-top-color: #f44336">
 							<div class="box-header with-border">
-								<h3 class="box-title">Google Drive</h3>
-
+								<!-- <h3 class="box-title">Google Drive</h3> -->
+								<img alt="#" src="etc/driveimage/google_image.png" style="height:30pt; width:30pt;">
 								<div class="box-tools pull-right">
 									<button type="button" class="btn btn-box-tool"
 										data-widget="collapse">
@@ -455,37 +504,39 @@
 										<i class="fa fa-times"></i>
 									</button>
 								</div>
-								<div class="box-body chart-responsive">
-									<div class="chart" id="donut-GoogleDrive"
-										style="font-size: 10px; height: 250px; position: relative;"></div>
+							</div>
+							<div class="box-body chart-responsive">
+								<div class="chart" id="donut-GoogleDrive"
+									style="height: 250px; position: relative;"></div>
 
-									<script type="text/javascript">
+								<script type="text/javascript">
 										Morris.Donut({
+											
 											element : 'donut-GoogleDrive',
 											resize : true,
-											colors : [ "#3c8dbc", "#f56954",
-													"#00a65a" ],
+											colors : [ "#4285f4", "#ea4335",
+													"#4285f4" ],
 											data : [ {
-												label : "Remaining Capacity",
-												value : 80
+												label : "남은 사용공간 (GB)",
+												
+												value : 15-<%= Gusedsize %>
 											}, {
-												label : "Capacity in use",
-												value : 20
+												label : "사용중인 공간 (GB)",
+												value : <%= Gusedsize %>
 											} ],
 											hideHover : 'auto'
 										});
 									</script>
-								</div>
-								<!-- /.box-body -->
 							</div>
-							<!-- /.box -->
+							<!-- /.box-body -->
 						</div>
+						<!-- /.box -->
 					</div>
 					<div class="col-md-4">
-						<div class="box box-primary">
+						<div class="box box-primary" style="border-top-color: #9a9a9a">
 							<div class="box-header with-border">
-								<h3 class="box-title">Dropbox</h3>
-
+								<!-- <h3 class="box-title">Dropbox</h3> -->
+								<img alt="#" src="etc/driveimage/dropbox_image.png" style="height:30pt; width:30pt;">
 								<div class="box-tools pull-right">
 									<button type="button" class="btn btn-box-tool"
 										data-widget="collapse">
@@ -505,14 +556,14 @@
 									Morris.Donut({
 										element : 'donut-Dropbox',
 										resize : true,
-										colors : [ "#3c8dbc", "#f56954",
-												"#00a65a" ],
+										colors : [ "#3c8dbc", "#0060ff",
+												"#b3cdf9" ],
 										data : [ {
-											label : "Remaining Capacity",
-											value : 30
+											label : "남은 사용공간 (GB)",
+											value : 2-<%= Dusedsize %>
 										}, {
-											label : "Capacity in use",
-											value : 20
+											label : "사용중인 공간 (GB)",
+											value : <%= Dusedsize %>
 										} ],
 										hideHover : 'auto'
 									});
@@ -523,10 +574,10 @@
 						<!-- /.box -->
 					</div>
 					<div class="col-md-4">
-						<div class="box box-primary">
+						<div class="box box-primary" style="border-top-color: #54a0dc">
 							<div class="box-header with-border">
-								<h3 class="box-title">Box</h3>
-
+								<!-- <h3 class="box-title">Box</h3> -->
+								<img alt="#" src="etc/driveimage/box_image.png" style="height:30pt; width:30pt;">
 								<div class="box-tools pull-right">
 									<button type="button" class="btn btn-box-tool"
 										data-widget="collapse">
@@ -549,11 +600,11 @@
 										colors : [ "#3c8dbc", "#f56954",
 												"#00a65a" ],
 										data : [ {
-											label : "Remaining Capacity",
-											value : 30
+											label : "남은 사용공간 (GB)",
+											value : 10-<%= Busedsize %>
 										}, {
-											label : "Capacity in use",
-											value : 20
+											label : "사용중인 공간 (GB)",
+											value : <%= Busedsize %>
 										} ],
 										hideHover : 'auto'
 									});
@@ -568,21 +619,21 @@
 				
 				<div class="row">
 				   <div class="col-md-12">
-				   <div class="box box-primary">
+				   <div class="box box-primary" style="border-top-color: #343d44">
 				   <div class="box-header with-border">
 				      <h3 class="box-title">Total Drive</h3>
 
 		              <div class="progress">
 		                <div class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" 
-		                style="width: 20%">
+		                style="width: <%=(Gusedsize + Dusedsize + Busedsize)/27*100%>%">
 		                <!-- width 부분 용량 퍼센트 변수 -->
-		                  <span class="sr-only">40% Complete (success)</span>
-		                  <!--  -->
+		                  <span class="sr-only"><%=(Gusedsize + Dusedsize + Busedsize)%> Complete (success)</span>
+		                  <% System.out.println("Total size percentage: " + (Gusedsize + Dusedsize + Busedsize)/27*100); %>
 		                </div>
 		              </div>
                      	<div align="right" style="color:  #808080">
                      		<!-- 용량 변수 -->
-		                2GB / 27GB
+		                <%= Gusedsize + Dusedsize + Busedsize %> GB / 27 GB
 	                	</div>
                     </div>
             <!-- /.box-body -->
@@ -599,40 +650,7 @@
 							<div class="box-header with-border">
 								<h3 class="box-title"></h3>
 								<div class="btn-group" style="padding-left: 35px;""float:left;">
-									<form action="file_upload" method="post"
-										enctype="multipart/form-data">
-										<input type="file" multiple id="file" name="userfile"
-											style="display: inline" placeholder="파일 선택" />
-										<!-- <input type="submit" /> -->
-										<!-- <script>
-							var curStyle=document.getElementById("file").style.display;
-								document.getElementById("file").style.display="none";
-						</script> -->
-										<button id="newFile" type="submit" class="btn btn-default">업로드</button>
-
-										<!-- onclick="check()" -->
-										<!-- <script>
-						 	function check(){
-						 		eventOccur(document.getElementById('file'),'click');
-						 	}			 	
-						 	function eventOccur(evEle, evType){
-					 		  if (evEle.fireEvent) {
-					 		    evEle.fireEvent('on' + evType);
-					 		  } else {
-					 		    var mouseEvent = document.createEvent('MouseEvents');
-					 		    mouseEvent.initEvent(evType, true, false);
-					 		    var transCheck = evEle.dispatchEvent(mouseEvent);
-					 		    if (!transCheck) {
-					 		      console.log("클릭 이벤트 발생 실패!");
-					 		    }
-					 		  }
-					 		}
-					 	</script> -->
-									</form>
-
-									<!-- button type="button" class="btn btn-default">삭제</button> -->
-
-
+									<h3 class="box-title">파일 목록</h3>
 								</div>
 
 								<div class="btn-group pull-right">
@@ -650,11 +668,19 @@
 							<div class="box-body">
 								<div class="btn_list">
 									<div class="table-responsive">
+										<form action="file_upload" method="post"
+											enctype="multipart/form-data">
+												<input type="file" multiple id="file" name="userfile"
+													style="display: inline" placeholder="파일 선택" />
+												<button id="newFile" type="submit" class="btn btn-default">업로드</button>
+										</form>
 
 										<form method="post" name="dashForm">
-											<button onClick='mySubmit(1)' class="btn btn-default">다운로드</button>
-											<button onClick='mySubmit(2)' class="btn btn-default">파일삭제</button>
-
+											<div class="button-group" style="">
+												<button onClick='mySubmit(1)' class="btn btn-default">다운로드</button>
+												<button onClick='mySubmit(2)' class="btn btn-default">파일삭제</button>
+											</div><hr>
+		
 											<script>
 												function mySubmit(index) {
 													if (index == 1) {

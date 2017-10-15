@@ -1,4 +1,4 @@
-package drives.siizecheck;
+package drives.sizecheck;
 
 
 import com.box.sdk.BoxAPIConnection;
@@ -7,7 +7,8 @@ import com.box.sdk.BoxUser;
 public class BoxChecksize extends Thread{
 	
 	private String access_Token ;
-
+	String testsize ; 
+	String testexp;
 	
 	public BoxChecksize(
 			String token) {
@@ -16,22 +17,25 @@ public class BoxChecksize extends Thread{
 	}
 	
 	public static String getFileSize(String size) {
-		   String gubn[] = {"Byte", "KB", "MB", "GB"};
+		String gubn[] = {"Byte", "KB", "MB", "GB"};
 		   String returnSize = new String();
 		   int gubnKey = 0 ; 
 		   double changeSize = 0;
 		   long filesize = 0 ;
 		   
-		   try {
 		      filesize = Long.parseLong(size);
-		      for( int x = 0 ; (filesize / (double) 1024) > 0 ; x++, filesize/=(double) 1024){
-		         gubnKey = x;
-		         changeSize = filesize;
-		      }
-		      returnSize = changeSize +" " +  gubn[gubnKey];
-		   }catch(Exception ex) {
-		      System.out.println("wrong size");
-		   }
+		      double testsize =0;
+		      double testsize2 = 0;
+		      testsize =  (filesize/(double) 1024);
+		      testsize = Double.parseDouble(String.format("%.4f",testsize));
+
+
+		      testsize/=(double) 1024;
+		      testsize = Double.parseDouble(String.format("%.4f",testsize));
+		      testsize/=(double) 1024;
+		      testsize = Double.parseDouble(String.format("%.3f",testsize));
+		      
+		    		  returnSize = Double.toString(testsize);
 		   return returnSize;
 		}
 	
@@ -54,19 +58,26 @@ public class BoxChecksize extends Thread{
 		
 		
 		String totalsize =  getFileSize(Long.toString(userInfo.getSpaceAmount()));
-		String[] total = totalsize.split(" ");
 		//total size 넘겨  줘야함   
-		String totalsizenum = total[0];
-		String totalexp = total[1];
+		String totalsizenum = totalsize;
+		
+		String totalexp = "GB";
 		//총 드라이브 크
         System.out.println("BOX TOTAL SIZE : "+ totalsizenum + " " + totalexp);
         
         String usedsize =  getFileSize(Long.toString(userInfo.getSpaceUsed()));
-		String[] used = usedsize.split(" ");
-		//used size 넘겨  줘야함   
-		String usedsizenum = used[0];
-		String usedexp = used[1];
         
+      
+        
+		
+		
+		//used size 넘겨  줘야함   
+		String usedsizenum = usedsize;
+		
+		  testsize = usedsizenum;
+		
+		String usedexp = "GB";
+		testexp = usedexp;
         //사용 중인 드라이브  양  
         System.out.println("BOX USED SIZE : "+usedsizenum + " " + usedexp );
         

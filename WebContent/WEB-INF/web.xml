@@ -95,4 +95,12 @@
     <servlet-name>DeleteDriveFile</servlet-name>
     <url-pattern>/delete_drive_file</url-pattern>
   </servlet-mapping>
+    <servlet>
+    <servlet-name>CheckDriveSize</servlet-name>
+    <servlet-class>drives.sizecheck.CheckDriveSize</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CheckDriveSize</servlet-name>
+    <url-pattern>/check_drive_size</url-pattern>
+  </servlet-mapping>
 </web-app>

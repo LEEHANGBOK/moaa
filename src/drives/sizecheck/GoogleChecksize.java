@@ -1,4 +1,4 @@
-package drives.siizecheck;
+package drives.sizecheck;
 
 import java.io.IOException;
 
@@ -13,6 +13,8 @@ public class GoogleChecksize extends Thread {
 
 	private String access_Token ;
 	private Drive service;
+	String testsize;
+	String testexp;
 	
 	public GoogleChecksize(
 			String token) {
@@ -25,23 +27,27 @@ public class GoogleChecksize extends Thread {
 			    .build();
 	}
 	
+	
 	public static String getFileSize(String size) {
-		   String gubn[] = {"Byte", "KB", "MB", "GB"};
+		String gubn[] = {"Byte", "KB", "MB", "GB"};
 		   String returnSize = new String();
 		   int gubnKey = 0 ; 
 		   double changeSize = 0;
 		   long filesize = 0 ;
 		   
-		   try {
 		      filesize = Long.parseLong(size);
-		      for( int x = 0 ; (filesize / (double) 1024) > 0 ; x++, filesize/=(double) 1024){
-		         gubnKey = x;
-		         changeSize = filesize;
-		      }
-		      returnSize = changeSize +" " +  gubn[gubnKey];
-		   }catch(Exception ex) {
-		      System.out.println("wrong size");
-		   }
+		      double testsize =0;
+		      double testsize2 = 0;
+		      testsize =  (filesize/(double) 1024);
+		      testsize = Double.parseDouble(String.format("%.4f",testsize));
+
+
+		      testsize/=(double) 1024;
+		      testsize = Double.parseDouble(String.format("%.4f",testsize));
+		      testsize/=(double) 1024;
+		      testsize = Double.parseDouble(String.format("%.3f",testsize));
+		      
+		    		  returnSize = Double.toString(testsize);
 		   return returnSize;
 		}
 	
@@ -53,14 +59,19 @@ public class GoogleChecksize extends Thread {
 			about = service.about().get().execute();
 			
 			String usedsize =  getFileSize(Long.toString(about.getQuotaBytesUsed()));
-    			String[] used = usedsize.split(" ");
+    		
     			
     			//used size 넘겨  줘야함   
-    			String usedsizenum = used[0];
-    			String usedexp = used[1];
+    			
+    			
     		
+    			testsize = usedsize;
+    			testexp = "GB";
+    			
+    			Integer.parseInt(usedsize);
+    			
 			//사용중인 드라이브 양   
-			System.out.println("GOOGLE USED SIZE : " + usedsizenum + " " + usedexp);
+			System.out.println("GOOGLE USED SIZE : " + usedsize + " " + "GB");
 			
 			
 

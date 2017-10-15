@@ -1,11 +1,16 @@
-package drives.siizecheck;
+package drives.sizecheck;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +23,7 @@ import util.db.MySqlConnection;
 /**
  * Servlet implementation class CheckDriveSize
  */
-@WebServlet("/CheckDriveSize")
+//@WebServlet("/CheckDriveSize")
 public class CheckDriveSize extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -103,14 +108,72 @@ public class CheckDriveSize extends HttpServlet {
 			}
 			rs_box.close();
 		
-		GoogleChecksize google = new GoogleChecksize(google_access_token);
-		google.start();
-		
-		BoxChecksize box = new BoxChecksize(Box_access_token);
-		box.start();
-		
-		DropChecksize drop = new DropChecksize(Drop_access_token);
-		drop.start();
+			GoogleChecksize google = new GoogleChecksize(google_access_token);
+			google.start();
+			
+			DropChecksize drop = new DropChecksize(Drop_access_token);
+			drop.start();
+			
+			BoxChecksize box = new BoxChecksize(Box_access_token);
+			box.start();
+	
+			
+//			int googleSize = Integer.parseInt(google.getFileSize("GB"));
+//			int boxSize = Integer.parseInt(box.getFileSize("GB"));
+//			int dropboxSize = Integer.parseInt(drop.getFileSize("GB"));
+			
+			
+			
+			ArrayList<Thread> threadList = new ArrayList<Thread>();
+			
+			threadList.add(box);
+			threadList.add(drop);
+			threadList.add(google);
+			
+			
+			for(int i = 0 ; i < threadList.size() ; i++) {
+				threadList.get(i).join();
+			}
+			String googleSize = google.testsize;
+			String dropboxSize = drop.testsize;
+			String boxSize = box.testsize;
+			
+			String googleexp = google.testexp;
+			String dropexp = drop.testexp;
+			String boxexp = box.testexp;
+			
+			Map<String, String> google_s = new HashMap<String, String>();
+			google_s.put("drive", "google");
+			google_s.put("size", googleSize);
+			google_s.put("exp", googleexp);
+			
+			Map<String, String> dropbpx_s = new HashMap<String, String>();
+			dropbpx_s.put("drive", "dropbox");
+			dropbpx_s.put("size", dropboxSize);
+			dropbpx_s.put("exp", dropexp);
+			
+			Map<String, String> box_s = new HashMap<String, String>();
+			box_s.put("drive", "box");
+			box_s.put("size", boxSize);
+			box_s.put("exp", boxexp);
+			
+			ArrayList<Map> drives = new ArrayList<Map>();
+			
+			drives.add(google_s);
+			drives.add(dropbpx_s);
+			drives.add(box_s);
+			
+			request.setAttribute("driveSizes", drives);
+			
+			ServletContext context = getServletContext();
+			
+			RequestDispatcher dispatcher = context.getRequestDispatcher("/dashboard.jsp");
+			
+			dispatcher.forward(request, response);
+			
+//			response.sendRedirect("dashboard.jsp");
+			
+			
 		
 		} catch (Exception e) {
 			e.printStackTrace();

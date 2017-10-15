@@ -1,4 +1,4 @@
-package drives.siizecheck;
+package drives.sizecheck;
 import java.util.Locale;
 
 import com.dropbox.core.DbxApiException;
@@ -9,30 +9,34 @@ import com.dropbox.core.v2.DbxClientV2;
 public class DropChecksize extends Thread {
 
 	private String access_Token ;
+	String testsize;
+String testexp;
 	
-	public DropChecksize(
-			String token) {
+	public DropChecksize(String token) {
 		
 		access_Token=token;
 	}
 	
 	public static String getFileSize(String size) {
-		   String gubn[] = {"Byte", "KB", "MB", "GB"};
+		String gubn[] = {"Byte", "KB", "MB", "GB"};
 		   String returnSize = new String();
 		   int gubnKey = 0 ; 
 		   double changeSize = 0;
 		   long filesize = 0 ;
 		   
-		   try {
 		      filesize = Long.parseLong(size);
-		      for( int x = 0 ; (filesize / (double) 1024) > 0 ; x++, filesize/=(double) 1024){
-		         gubnKey = x;
-		         changeSize = filesize;
-		      }
-		      returnSize = changeSize +" " +  gubn[gubnKey];
-		   }catch(Exception ex) {
-		      System.out.println("wrong size");
-		   }
+		      double testsize =0;
+		      double testsize2 = 0;
+		      testsize =  (filesize/(double) 1024);
+		      testsize = Double.parseDouble(String.format("%.4f",testsize));
+
+
+		      testsize/=(double) 1024;
+		      testsize = Double.parseDouble(String.format("%.4f",testsize));
+		      testsize/=(double) 1024;
+		      testsize = Double.parseDouble(String.format("%.3f",testsize));
+		      
+		    		  returnSize = Double.toString(testsize);
 		   return returnSize;
 		}
 	
@@ -51,14 +55,15 @@ public class DropChecksize extends Thread {
 		        	//사용중인 양  
 		        	
 		        	String usedsize =  getFileSize(Long.toString(client.users().getSpaceUsage().getUsed()));
-		    		String[] used = usedsize.split(" ");
 		    		
 		    		//used size 넘겨  줘야함   
-		    		String usedsizenum = used[0];
-		    		String usedexp = used[1];
+		    		testsize = usedsize;
+		    		
+		    		
+		    		String usedexp = "GB";
+		        	testexp = usedexp;
 		        	
-		        	
-					System.out.println("DROP BOX used : "+usedsizenum + " " + usedexp);
+					System.out.println("DROP BOX used : "+testsize + " " + usedexp);
 						
 					} catch (DbxApiException e1) {
 					// TODO Auto-generated catch block
