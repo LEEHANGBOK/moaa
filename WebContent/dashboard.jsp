@@ -50,6 +50,29 @@
 		//key_id에 디비 값을 저장 : (주의)while문 안에서만 실행된다.
 		user_domain_path = rs.getString("domain_path");
 	}
+	rs.close();
+	
+	String sql_token = "SELECT * FROM token WHERE user_id='" + session_id + "'";
+	
+	ResultSet rs_token = st.executeQuery(sql_token);
+
+	ArrayList<String> driArrList = new ArrayList<String>();
+	
+	if(rs_token.next()){
+		do{
+			System.out.println("[Knowing] " + rs_token.getString("drive") + " is authorized");
+			driArrList.add(rs_token.getString("drive"));
+		}while(rs_token.next());
+
+	}else{
+	}
+	
+	Object[] objectList = driArrList.toArray();
+	String[] driArr =  Arrays.copyOf(objectList,objectList.length,String[].class);
+	
+	boolean google_con = Arrays.asList(driArr).contains("google");
+	boolean dropbox_con = Arrays.asList(driArr).contains("dropbox");
+	boolean box_con = Arrays.asList(driArr).contains("box");
 
 	//절대경로 입력 시 해당 디렉토리에 있는 파일들을 페이지 상에 출력, 클릭 시 다운로드 가능
 	String saveDir = "/home/andrew/Desktop/Workspace/dirPractice/" + user_domain_path + "/log/info";
@@ -315,14 +338,14 @@
 						<!-- User Account: style can be found in dropdown.less -->
 						<li class="dropdown user user-menu"><a href="#"
 							class="dropdown-toggle" data-toggle="dropdown"> <img
-								src="dist/img/user2-160x160.jpg" class="user-image"
+								src="dist/img/User_IkHwan.jpg" class="user-image"
 								alt="User Image"> <span class="hidden-xs"> <%=user_name%>
 							</span>
 						</a>
 							<ul class="dropdown-menu">
 								<!-- User image -->
 								<li class="user-header"><img
-									src="dist/img/user2-160x160.jpg" class="img-circle"
+									src="dist/img/User_IkHwan.jpg" class="img-circle"
 									alt="User Image">
 
 									<p>
@@ -370,7 +393,7 @@
 				<!-- Sidebar user panel -->
 				<div class="user-panel">
 					<div class="pull-left image">
-						<img src="dist/img/user2-160x160.jpg" class="img-circle"
+						<img src="dist/img/User_IkHwan.jpg" class="img-circle"
 							alt="User Image">
 					</div>
 					<div class="pull-left info">
@@ -411,13 +434,6 @@
 							<li><a href="pages/tables/data.html"><i
 									class="fa fa-dropbox"></i> Dropbox</a></li>
 						</ul></li>
-					<li><a href="#"><i class="fa fa-user"></i><span>
-								계정관리 </span></a></li>
-					<li><a href="#"><i class="fa fa-comment"></i><span>
-								사용법 </span></a></li>
-					<li><a href="#"><i class="fa fa-users"></i><span>
-								개발자</span></a></li>
-					<li>
 				</ul>
 			</section>
 			<!-- /.sidebar -->
@@ -442,7 +458,23 @@
 
 			<section class="content">
 				<!-- Info boxes -->
-			<a href="check_drive_size" class="btn button fa fa-refresh"> 차트 새로고침</a>
+				<%
+		        	if(driArr.length != 0) {
+		        %>
+				<a href="check_drive_size" class="btn button fa fa-refresh"> 차트 새로고침</a>
+				<%
+					} else {
+				%>
+				<div class="col-md-12" style="width:100%; padding-left:0px; padding-right:0px">
+					<div class="box box-primary">
+						<div class="box-header with-border">
+							<div><p>아직 인증된 드라이브가 없습니다</p></div>
+						</div>
+					</div>
+				</div>
+				<%		
+					}
+				%>
 										
 					 <%
 						Map<String, String> Gdrives = null;
@@ -490,6 +522,10 @@
 					%>
 			
 				<div class="row">
+				
+					<%
+			        	if(google_con) {
+			         %>
 					<div class="col-md-4">
 						<div class="box box-primary" style="border-top-color: #f44336">
 							<div class="box-header with-border">
@@ -520,7 +556,7 @@
 											data : [ {
 												label : "남은 사용공간 (GB)",
 												
-												value : 15-<%= Gusedsize %>
+												value : <%= 15- Gusedsize %>
 											}, {
 												label : "사용중인 공간 (GB)",
 												value : <%= Gusedsize %>
@@ -533,6 +569,10 @@
 						</div>
 						<!-- /.box -->
 					</div>
+					<%
+		        		}
+			        	if(dropbox_con) {
+		         	%>
 					<div class="col-md-4">
 						<div class="box box-primary" style="border-top-color: #9a9a9a">
 							<div class="box-header with-border">
@@ -574,6 +614,10 @@
 						</div>
 						<!-- /.box -->
 					</div>
+					<%
+		        		}
+			        	if(box_con) {
+		         	%>
 					<div class="col-md-4">
 						<div class="box box-primary" style="border-top-color: #54a0dc">
 							<div class="box-header with-border">
@@ -615,6 +659,9 @@
 						</div>
 						<!-- /.box -->
 					</div>
+					<%
+		           		} 
+		           	%>
 				</div>
 				<!-- /.row -->
 				
