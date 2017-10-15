@@ -14,16 +14,16 @@ public class CheckSize {
 		String Drop_access_token="kFb_ENWtmyUAAAAAAAAAyTBrdlVR4ZlHTlzRk2fAZA-A3uwdUe_h9x6c51POUFU5";
 		
 		
-		Google_checksize google = new Google_checksize(google_access_token);
+		GoogleChecksize google = new GoogleChecksize(google_access_token);
 		google.start();
 		
 		
 		
-		Box_checksize box = new Box_checksize(Box_access_token);
+		BoxChecksize box = new BoxChecksize(Box_access_token);
 		box.start();
 		
 		
-		Drop_checksize drop = new Drop_checksize(Drop_access_token);
+		DropChecksize drop = new DropChecksize(Drop_access_token);
 		drop.start();
 		
 	}

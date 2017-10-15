@@ -9,12 +9,12 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.About;
 
-public class Google_checksize extends Thread {
+public class GoogleChecksize extends Thread {
 
 	private String access_Token ;
 	private Drive service;
 	
-	public Google_checksize(
+	public GoogleChecksize(
 			String token) {
 		
 		access_Token=token;

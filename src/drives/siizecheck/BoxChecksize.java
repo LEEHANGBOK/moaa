@@ -4,12 +4,12 @@ package drives.siizecheck;
 import com.box.sdk.BoxAPIConnection;
 import com.box.sdk.BoxUser;
 
-public class Box_checksize extends Thread{
+public class BoxChecksize extends Thread{
 	
 	private String access_Token ;
 
 	
-	public Box_checksize(
+	public BoxChecksize(
 			String token) {
 		
 		access_Token=token;
