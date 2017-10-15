@@ -162,7 +162,7 @@ public class CheckDriveSize extends HttpServlet {
 			drives.add(google_s);
 			drives.add(dropbpx_s);
 			drives.add(box_s);
-			
+			request.setAttribute("flag", true);
 			request.setAttribute("driveSizes", drives);
 			
 			ServletContext context = getServletContext();

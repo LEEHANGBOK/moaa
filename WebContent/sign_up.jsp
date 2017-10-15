@@ -13,6 +13,7 @@
     <link href="assets/css/font-awesome.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
     <link href="assets/css/sign-in-up.css" rel="stylesheet">
+    <link rel="shortcut icon" href="assets/ico/favicon.png">
     
 	<script type="text/javascript">
     

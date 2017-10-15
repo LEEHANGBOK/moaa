@@ -90,6 +90,7 @@
 <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
 <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+<link rel="shortcut icon" href="assets/ico/favicon.png">
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
@@ -185,7 +186,7 @@
 	});
 </script>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini" >
 	<div class="wrapper">
 
 		<header class="main-header">
@@ -1224,6 +1225,8 @@
 
 	</div>
 	<!-- ./wrapper -->
+	
+	
 
 	<!-- jQuery 3 -->
 	<script src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -1248,6 +1251,15 @@
 	<script src="dist/js/pages/dashboard2.js"></script>
 	<!-- AdminLTE for demo purposes -->
 	<script src="dist/js/demo.js"></script>
+	
+	<script >
+	/* 
+	$(document).ready(function(){
+		location.href='check_drive_size'
+	});s */
+	
+
+	</script>
 </body>
 </html>
 
