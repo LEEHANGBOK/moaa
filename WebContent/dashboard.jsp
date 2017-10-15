@@ -468,7 +468,7 @@
 				<div class="col-md-12" style="width:100%; padding-left:0px; padding-right:0px">
 					<div class="box box-primary">
 						<div class="box-header with-border">
-							<div><p>아직 인증된 드라이브가 없습니다</p></div>
+							<div><p><b>인증 드라이브 사용 현황 : </b>아직 인증된 드라이브가 없습니다</p></div>
 						</div>
 					</div>
 				</div>
@@ -597,8 +597,8 @@
 									Morris.Donut({
 										element : 'donut-Dropbox',
 										resize : true,
-										colors : [ "#3c8dbc", "#0060ff",
-												"#b3cdf9" ],
+										colors : [ "#4285f4", "#ea4335",
+												"#4285f4" ],
 										data : [ {
 											label : "남은 사용공간 (GB)",
 											value : 2-<%= Dusedsize %>
@@ -642,8 +642,8 @@
 									Morris.Donut({
 										element : 'donut-Box',
 										resize : true,
-										colors : [ "#3c8dbc", "#f56954",
-												"#00a65a" ],
+										colors : [ "#4285f4", "#ea4335",
+											"#4285f4" ],
 										data : [ {
 											label : "남은 사용공간 (GB)",
 											value : 10-<%= Busedsize %>
@@ -666,6 +666,9 @@
 				<!-- /.row -->
 				
 				<div class="row">
+				<%
+		        	if(driArr.length != 0) {
+		        %>
 				   <div class="col-md-12">
 				   <div class="box box-primary" style="border-top-color: #343d44">
 				   <div class="box-header with-border">
@@ -688,6 +691,19 @@
           </div>
           <!-- /.box -->
             </div>
+            <%
+				} else {
+			%>
+			<div class="col-md-12">
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<div><p><b>등록된 드라이브 전체용량 : </b>아직 인증된 드라이브가 없습니다</p></div>
+					</div>
+				</div>
+			</div>
+			<%		
+				}
+			%>
             </div>
             <!-- /.row -->
 				
@@ -697,7 +713,7 @@
 						<div class="box">
 							<div class="box-header with-border">
 								<h3 class="box-title"></h3>
-								<div class="btn-group" style="padding-left: 35px;""float:left;">
+								<div class="btn-group" style="float:left; padding-left:3px">
 									<h3 class="box-title">파일 목록</h3>
 								</div>
 
@@ -724,7 +740,7 @@
 										</form>
 
 										<form method="post" name="dashForm">
-											<div class="button-group" style="">
+											<div class="button-group" style="position: absolute;left: 325px;top: 65px;">
 												<button onClick='mySubmit(1)' class="btn btn-default">다운로드</button>
 												<button onClick='mySubmit(2)' class="btn btn-default">파일삭제</button>
 											</div><hr>
@@ -929,6 +945,12 @@
 									</div>
 								</div>
 								<div class="btn_icon" style="display: none;">
+								<input type="file" multiple id="file" name="userfile" style="display: inline" placeholder="파일 선택" />
+								<button class="btn btn-default">업로드</button>
+								<div class="button-group" style="position: absolute;left: 325px;top: 65px;">
+									<button class="btn btn-default">다운로드</button>
+									<button class="btn btn-default">파일삭제</button>
+								</div><hr>
 									<form>
 										<ul id="checkboxTbl"
 											style="list-style-type: none; margin: 0; padding: 0;">
