@@ -141,7 +141,7 @@ experience.
     </header>
     <!-- / HOMEPAGE -->
     <!--  SECTION-1 -->
-    <section id="Section-1" class="fullbg">
+    <!-- <section id="Section-1" class="fullbg">
         <div class="section-divider">
         </div>
         <div class="container">
@@ -199,9 +199,9 @@ experience.
                     </div>
                 </div>
             </div>
-            <!-- end row -->
+            end row
         </div>
-    </section>
+    </section> -->
     <!-- SECTION-2(gallery) -->
 <!--
     <section id="Section-2" class="fullbg color-white">
@@ -536,7 +536,7 @@ experience.
     </section>
 -->
     <!-- SECTION-6 (contact) -->
-    <section id="Section-6" class="fullbg">
+    <!-- <section id="Section-6" class="fullbg">
         <div class="section-divider">
         </div>
         <div class="container">
@@ -565,7 +565,7 @@ experience.
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
     <!-- FOOTER -->
     <footer id="foot-sec">
         <div class="footerdivide">
